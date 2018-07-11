@@ -12,6 +12,9 @@ public class UIManager : MonoBehaviour {
     [SerializeField]
     Button InteractableViewBackButton;
     [SerializeField]
+    GameObject bookVolume;
+    Book book;
+    [SerializeField]
     GameController gameController;
     //void Awake()
     //{
@@ -24,7 +27,26 @@ public class UIManager : MonoBehaviour {
     void Start()
     {
         InteractableViewBackButton.gameObject.SetActive(false);
-        InteractableViewBackButton.onClick.AddListener(() => { gameController.SwitchToNormalView(); });
+        InteractableViewBackButton.onClick.AddListener(gameController.SwitchToNormalView);
+        InteractableViewBackButton.onClick.AddListener(HideInteractableViewUI);
+
+        book = bookVolume.GetComponentInChildren<Book>();
+        bookVolume.SetActive(false);
+    }
+
+    public void ShowBookUI(Sprite[] pages) 
+    {
+        book.Initialize(pages);
+        bookVolume.SetActive(true);
+
+        InteractableViewBackButton.gameObject.SetActive(true);
+        InteractableViewBackButton.onClick.AddListener(HideBook);
+    }
+
+    void HideBook()
+    {
+        bookVolume.SetActive(false);
+        InteractableViewBackButton.onClick.RemoveListener(HideBook);
     }
 
     public void ShowInteractableViewUI()
@@ -32,7 +54,7 @@ public class UIManager : MonoBehaviour {
         InteractableViewBackButton.gameObject.SetActive(true);
     }
 
-    public void HideInteractableViewUI()
+    void HideInteractableViewUI()
     {
         InteractableViewBackButton.gameObject.SetActive(false);
     }

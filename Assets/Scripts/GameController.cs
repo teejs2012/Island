@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameController : MonoBehaviour {
-
-    enum State
-    {
-        NormalView, InteractableView
-    }
-
     State currentState = State.NormalView;
+    State CurrentState
+    {
+        get { return currentState; }
+        set {
+            currentState = value;
+            if(BroadcastState != null)
+            {
+                BroadcastState(currentState);
+            }
+        }
+    }
 
     public Camera NormalViewCamera;
     public Camera InteractableViewCamera;
@@ -28,15 +33,20 @@ public class GameController : MonoBehaviour {
     [Header("Params")]
     public float movespeed;
 
+    public delegate void ReturnState(State state);
+    public event ReturnState BroadcastState;
+
     // Update is called once per frame
     void Update () {
-        switch (currentState)
+        switch (CurrentState)
         {
             case State.NormalView:
                 NormalViewUpdate();
                 break;
             case State.InteractableView:
                 InteractableViewUpdate();
+                break;
+            case State.BookView:
                 break;
         }		
 	}
@@ -50,17 +60,36 @@ public class GameController : MonoBehaviour {
 
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.collider != null && hit.collider.CompareTag("Interactable"))
+                if (hit.collider != null)
                 {
-                    SwitchToInteractableView(hit.collider);
+                    switch (hit.collider.tag)
+                    {
+                        case Tags.InteractableTag:
+                            SwitchToInteractableView(hit.collider);
+                            break;
+                        case Tags.BookTag:
+                            SwitchToBookView(hit.collider);
+                            break;
+                    }
                 }
             }
         }
     }
 
+    void SwitchToBookView(Collider col)
+    {
+        var data = col.gameObject.GetComponent<BookData>();
+        if (data != null)
+        {
+            UIManager.ShowBookUI(data.Pages);
+            CurrentState = State.BookView;
+            InteractableViewCamera.depth = 0;
+        }
+    }
+
     void SwitchToInteractableView(Collider col)
     {
-        currentState = State.InteractableView;
+        CurrentState = State.InteractableView;
         InteractableViewCamera.depth = 0;
         currentGO = col.gameObject;
         SaveGOTransform(currentGO.transform);
@@ -71,22 +100,31 @@ public class GameController : MonoBehaviour {
             currentGO.transform.rotation = data.Rotation;
             currentGO.transform.localScale = data.Scale;
         }
-        UIManager.ShowInteractableViewUI();
         center = currentGO.GetComponent<Collider>().bounds.center;
         currentGOTransform = currentGO.transform;
+        UIManager.ShowInteractableViewUI();
     }
 
     public void SwitchToNormalView()
     {
-        currentState = State.NormalView;
-        InteractableViewCamera.depth = -1;
-        NormalViewCamera.depth = 0;
-        //move back the interactable object
-        currentGO.transform.position = originalGOPosition;
-        currentGO.transform.rotation = originalGORotation;
-        currentGO.transform.localScale = originalGOScale;
-        currentGO = null;
-        UIManager.HideInteractableViewUI();
+        if(CurrentState == State.InteractableView)
+        {
+            CurrentState = State.NormalView;
+            InteractableViewCamera.depth = -1;
+            NormalViewCamera.depth = 0;
+            //move back the interactable object
+            currentGO.transform.position = originalGOPosition;
+            currentGO.transform.rotation = originalGORotation;
+            currentGO.transform.localScale = originalGOScale;
+            currentGO = null;
+        }
+        else if(CurrentState == State.BookView)
+        {
+            CurrentState = State.NormalView;
+            InteractableViewCamera.depth = -1;
+            NormalViewCamera.depth = 0;
+        }
+
     }
 
     void SaveGOTransform(Transform t)
@@ -112,14 +150,6 @@ public class GameController : MonoBehaviour {
             currentGOTransform.RotateAround(center, currentGOTransform.forward, objectLeft.z * yrot);
             currentGOTransform.RotateAround(center, currentGOTransform.right, objectLeft.x * yrot);
             currentGOTransform.RotateAround(center, currentGOTransform.up, objectLeft.y * yrot);
-
-
-            // float xrot = Input.GetAxis ("Mouse X") * movespeed * Time.deltaTime;
-            // float yrot = Input.GetAxis ("Mouse Y") * movespeed * Time.deltaTime;
-            // Vector3 objectUp = currentTarget.InverseTransformDirection (Vector3.up);
-            // Vector3 objectLeft = currentTarget.InverseTransformDirection (Vector3.left);
-            // currentTarget.Rotate (-objectUp * xrot);
-            // currentTarget.Rotate (-objectLeft * yrot);
         }
         if (Input.GetAxis("Mouse ScrollWheel") != 0)
         {

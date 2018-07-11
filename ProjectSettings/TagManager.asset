@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Interactable
   - OtherCamera
+  - Book
   layers:
   - Default
   - TransparentFX
