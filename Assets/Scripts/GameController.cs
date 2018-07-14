@@ -145,8 +145,7 @@ public class GameController : MonoBehaviour {
 
     void SwitchToInteractableView(Collider col)
     {
-        CurrentState = State.InteractableView;
-        ActivateInteractableViewCamera();
+
         currentGO = col.gameObject;
         SaveGOTransform(currentGO.transform);
         InteractableData data = currentGO.GetComponent<InteractableData>();
@@ -159,6 +158,9 @@ public class GameController : MonoBehaviour {
         center = currentGO.GetComponent<Collider>().bounds.center;
         currentGOTransform = currentGO.transform;
         UIManager.ShowInteractableViewUI();
+
+        CurrentState = State.InteractableView;
+        ActivateInteractableViewCamera();
     }
 
     #region Camera
@@ -190,8 +192,6 @@ public class GameController : MonoBehaviour {
 
     public void SwitchToNormalView()
     {
-        CurrentState = State.ARView;
-        ActivateARViewCamera();
         if (CurrentState == State.InteractableView)
         {
 
@@ -201,6 +201,8 @@ public class GameController : MonoBehaviour {
             currentGO.transform.localScale = originalGOScale;
             currentGO = null;
         }
+        CurrentState = State.ARView;
+        ActivateARViewCamera();
     }
 
     void SaveGOTransform(Transform t)

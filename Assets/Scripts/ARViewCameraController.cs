@@ -42,8 +42,9 @@ public class ARViewCameraController : MonoBehaviour {
     void MoveNormalViewCamera()
     {
         float moveX = Input.GetAxis("Horizontal");
-        float moveY = Input.GetAxis("Vertical");
-        transform.Translate(new Vector3(moveX, 0, moveY)* MoveSpeed);
+        float moveZ = Input.GetAxis("Vertical");
+        float moveY = (Input.GetKey(KeyCode.LeftShift)?0.5f:0) - (Input.GetKey(KeyCode.Space)?0.5f:0);
+        transform.Translate(new Vector3(moveX, moveY, moveZ)* MoveSpeed);
 
         //if (Input.GetMouseButtonDown(1))
         //{
