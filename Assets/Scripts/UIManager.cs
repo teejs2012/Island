@@ -1,18 +1,17 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using DentedPixel;
 
 public class UIManager : MonoBehaviour {
 
-    //static UIManager instance;
-    //public static UIManager Instance
-    //{
-    //    get { return instance; }
-    //}
+    
     [SerializeField]
     Button InteractableViewBackButton;
     [SerializeField]
     GameObject bookVolume;
+    [SerializeField]
+    Image fadeOverlay;
     Book book;
     [SerializeField]
     GameController gameController;
@@ -57,5 +56,18 @@ public class UIManager : MonoBehaviour {
     void HideInteractableViewUI()
     {
         InteractableViewBackButton.gameObject.SetActive(false);
+    }
+
+    public void FadeScreenTransition(Action action)
+    {
+        LeanTween.alpha(fadeOverlay.rectTransform, 1, 0.5f).setOnComplete(
+            () => {
+                if (action != null)
+                {
+                    action.Invoke();
+                }
+                LeanTween.alpha(fadeOverlay.rectTransform, 0, 0.5f);
+            }
+            );
     }
 }

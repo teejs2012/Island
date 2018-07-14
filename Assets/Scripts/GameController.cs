@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DentedPixel;
 
 public class GameController : MonoBehaviour {
-    State currentState = State.NormalView;
+    State currentState = State.ARView;
     State CurrentState
     {
         get { return currentState; }
@@ -16,7 +17,8 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    public Camera NormalViewCamera;
+    public Camera ARViewCamera;
+    public Camera VRViewCamera;
     public Camera InteractableViewCamera;
 
     [SerializeField]
@@ -40,7 +42,8 @@ public class GameController : MonoBehaviour {
     void Update () {
         switch (CurrentState)
         {
-            case State.NormalView:
+            case State.ARView:
+            case State.VRView:
                 NormalViewUpdate();
                 break;
             case State.InteractableView:
@@ -70,9 +73,62 @@ public class GameController : MonoBehaviour {
                         case Tags.BookTag:
                             SwitchToBookView(hit.collider);
                             break;
+                        case Tags.ARVRSwitch:
+                            SwitchARVRView(hit.collider);
+                            break;
+                        case Tags.Breakable:
+                            TryBreak(hit.collider, ray.direction);
+                            break;
                     }
                 }
             }
+        }
+    }
+
+    void TryBreak(Collider col, Vector3 direction)
+    {
+        var data = col.GetComponent<BreakableData>();
+        var rigidbody = col.GetComponent<Rigidbody>();
+        if (data != null)
+        {
+            rigidbody.AddForce(direction * data.Force);
+            data.IncreaseCount();
+        }
+    }
+
+    GameObject currentVRScene;
+
+    void SwitchARVRView(Collider col)
+    {
+        if(CurrentState == State.ARView)
+        {
+            CurrentState = State.VRView;
+            VRViewCamera.transform.position = ARViewCamera.transform.position;
+            VRViewCamera.transform.rotation = ARViewCamera.transform.rotation;
+            ActivateVRViewCamera();
+            var data = col.GetComponent<ARVRSwitchData>();
+            if(data != null)
+            {
+                currentVRScene = data.TargetVRScene;
+                currentVRScene.SetActive(true);
+
+                LeanTween.move(VRViewCamera.gameObject, data.TargetPosition, 1);
+                LeanTween.rotate(VRViewCamera.gameObject, data.TargetRotation, 1);
+            }
+        }
+        else
+        {
+            UIManager.FadeScreenTransition(
+                    () =>
+                    {
+                        CurrentState = State.ARView;
+                        ActivateARViewCamera();
+                        if (currentVRScene != null)
+                        {
+                            currentVRScene.SetActive(false);
+                        }
+                    }
+                );
         }
     }
 
@@ -83,14 +139,14 @@ public class GameController : MonoBehaviour {
         {
             UIManager.ShowBookUI(data.Pages);
             CurrentState = State.BookView;
-            InteractableViewCamera.depth = 0;
+            ActivateInteractableViewCamera();
         }
     }
 
     void SwitchToInteractableView(Collider col)
     {
         CurrentState = State.InteractableView;
-        InteractableViewCamera.depth = 0;
+        ActivateInteractableViewCamera();
         currentGO = col.gameObject;
         SaveGOTransform(currentGO.transform);
         InteractableData data = currentGO.GetComponent<InteractableData>();
@@ -105,26 +161,46 @@ public class GameController : MonoBehaviour {
         UIManager.ShowInteractableViewUI();
     }
 
+    #region Camera
+    void DisableAllCameras()
+    {
+        ARViewCamera.enabled = false;
+        VRViewCamera.enabled = false;
+        InteractableViewCamera.enabled = false;
+    }
+
+    void ActivateARViewCamera()
+    {
+        DisableAllCameras();
+        ARViewCamera.enabled = true;
+    }
+
+    void ActivateVRViewCamera()
+    {
+        DisableAllCameras();
+        VRViewCamera.enabled = true;
+    }
+
+    void ActivateInteractableViewCamera()
+    {
+        DisableAllCameras();
+        InteractableViewCamera.enabled = true;
+    }
+    #endregion
+
     public void SwitchToNormalView()
     {
-        if(CurrentState == State.InteractableView)
+        CurrentState = State.ARView;
+        ActivateARViewCamera();
+        if (CurrentState == State.InteractableView)
         {
-            CurrentState = State.NormalView;
-            InteractableViewCamera.depth = -1;
-            NormalViewCamera.depth = 0;
+
             //move back the interactable object
             currentGO.transform.position = originalGOPosition;
             currentGO.transform.rotation = originalGORotation;
             currentGO.transform.localScale = originalGOScale;
             currentGO = null;
         }
-        else if(CurrentState == State.BookView)
-        {
-            CurrentState = State.NormalView;
-            InteractableViewCamera.depth = -1;
-            NormalViewCamera.depth = 0;
-        }
-
     }
 
     void SaveGOTransform(Transform t)
