@@ -5,5 +5,5 @@ using UnityEngine;
 
 public enum State
 {
-    ARView, VRView,InteractableView, BookView
+    ARView, VRView,InteractableView, BookView, DigitLockView
 }

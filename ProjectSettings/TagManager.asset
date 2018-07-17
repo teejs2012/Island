@@ -9,6 +9,8 @@ TagManager:
   - Book
   - ARVRSwitch
   - Breakable
+  - DigitLock
+  - Lockable
   layers:
   - Default
   - TransparentFX

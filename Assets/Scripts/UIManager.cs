@@ -11,6 +11,8 @@ public class UIManager : MonoBehaviour {
     [SerializeField]
     GameObject bookVolume;
     [SerializeField]
+    GameObject digitLockUI;
+    [SerializeField]
     Image fadeOverlay;
     Book book;
     [SerializeField]
@@ -48,6 +50,19 @@ public class UIManager : MonoBehaviour {
         InteractableViewBackButton.onClick.RemoveListener(HideBook);
     }
 
+    public void ShowLockUI()
+    {
+        digitLockUI.SetActive(true);
+        InteractableViewBackButton.gameObject.SetActive(true);
+        InteractableViewBackButton.onClick.AddListener(HideLockUI);
+    }
+
+    void HideLockUI()
+    {
+        digitLockUI.SetActive(false);
+        InteractableViewBackButton.onClick.RemoveListener(HideLockUI);
+    }
+
     public void ShowInteractableViewUI()
     {
         InteractableViewBackButton.gameObject.SetActive(true);
@@ -69,5 +84,10 @@ public class UIManager : MonoBehaviour {
                 LeanTween.alpha(fadeOverlay.rectTransform, 0, 0.5f);
             }
             );
+    }
+
+    public void ClickBackButton()
+    {
+        InteractableViewBackButton.onClick.Invoke();
     }
 }

@@ -20,10 +20,12 @@ public class GameController : MonoBehaviour {
     public Camera ARViewCamera;
     public Camera VRViewCamera;
     public Camera InteractableViewCamera;
+    public Camera DigitLockViewCamera;
 
     [SerializeField]
     UIManager UIManager;
-
+    [SerializeField]
+    LockSystem LockSystem;
     //For Interactable
     GameObject currentGO;
     Vector3 originalGOPosition;
@@ -43,56 +45,92 @@ public class GameController : MonoBehaviour {
         switch (CurrentState)
         {
             case State.ARView:
+                ARViewUpdate();
+                break;
             case State.VRView:
-                NormalViewUpdate();
+                VRViewUpdate();
                 break;
             case State.InteractableView:
                 InteractableViewUpdate();
                 break;
             case State.BookView:
+            case State.DigitLockView:
                 break;
+            
         }		
 	}
 
-    void NormalViewUpdate()
+    void CheckHit(Ray ray)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider != null)
+            {
+                switch (hit.collider.tag)
+                {
+                    case Tags.InteractableTag:
+                        SwitchToInteractableView(hit.collider);
+                        break;
+                    case Tags.BookTag:
+                        SwitchToBookView(hit.collider);
+                        break;
+                    case Tags.ARVRSwitch:
+                        SwitchARVRView(hit.collider);
+                        break;
+                    case Tags.Breakable:
+                        TryBreak(hit.collider, ray.direction);
+                        break;
+                    case Tags.DigitLock:
+                        SwitchDigitLockView(hit.collider);
+                        break;
+                    case Tags.Lockable:
+                        TryChangeStatus(hit.collider);
+                        break;
+                }
+            }
+        }
+    }
+
+    void VRViewUpdate()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+            CheckHit(VRViewCamera.ScreenPointToRay(Input.mousePosition));
+        }
+    }
 
-            if (Physics.Raycast(ray, out hit))
+    void ARViewUpdate()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            CheckHit(ARViewCamera.ScreenPointToRay(Input.mousePosition));
+        }
+    }
+
+    void TryChangeStatus(Collider col)
+    {
+        var data = col.GetComponent<Lockable>();
+        if(data != null)
+        {
+            if (data.IsLocked)
             {
-                if (hit.collider != null)
-                {
-                    switch (hit.collider.tag)
-                    {
-                        case Tags.InteractableTag:
-                            SwitchToInteractableView(hit.collider);
-                            break;
-                        case Tags.BookTag:
-                            SwitchToBookView(hit.collider);
-                            break;
-                        case Tags.ARVRSwitch:
-                            SwitchARVRView(hit.collider);
-                            break;
-                        case Tags.Breakable:
-                            TryBreak(hit.collider, ray.direction);
-                            break;
-                    }
-                }
+                data.ShakeTargetLock();
+            }
+            else
+            {
+                data.ChangeStatus();
             }
         }
     }
 
     void TryBreak(Collider col, Vector3 direction)
     {
-        var data = col.GetComponent<BreakableData>();
-        var rigidbody = col.GetComponent<Rigidbody>();
+        var data = col.GetComponentInParent<BreakableData>();
+        //var rigidbody = col.GetComponent<Rigidbody>();
         if (data != null)
         {
-            rigidbody.AddForce(direction * data.Force);
-            data.IncreaseCount();
+            data.TryBreak();
         }
     }
 
@@ -129,6 +167,18 @@ public class GameController : MonoBehaviour {
                         }
                     }
                 );
+        }
+    }
+
+    void SwitchDigitLockView(Collider col)
+    {
+        var data = col.gameObject.GetComponent<DigitLockData>();
+        if(data != null)
+        {
+            LockSystem.Initialize(data);
+            UIManager.ShowLockUI();
+            CurrentState = State.DigitLockView;
+            ActivateLockViewCamera();
         }
     }
 
@@ -169,6 +219,7 @@ public class GameController : MonoBehaviour {
         ARViewCamera.enabled = false;
         VRViewCamera.enabled = false;
         InteractableViewCamera.enabled = false;
+        DigitLockViewCamera.enabled = false;
     }
 
     void ActivateARViewCamera()
@@ -187,6 +238,12 @@ public class GameController : MonoBehaviour {
     {
         DisableAllCameras();
         InteractableViewCamera.enabled = true;
+    }
+
+    void ActivateLockViewCamera()
+    {
+        DisableAllCameras();
+        DigitLockViewCamera.enabled = true;
     }
     #endregion
 

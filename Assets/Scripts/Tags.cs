@@ -8,4 +8,7 @@ public class Tags {
     public const string BookTag = "Book";
     public const string ARVRSwitch = "ARVRSwitch";
     public const string Breakable = "Breakable";
+    public const string DigitLock = "DigitLock";
+    public const string Lockable = "Lockable";
+    public const string Untagged = "Untagged";
 }
