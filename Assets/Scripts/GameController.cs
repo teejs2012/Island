@@ -228,7 +228,7 @@ public class GameController : MonoBehaviour {
     #region Camera
     void DisableAllCameras()
     {
-        ARViewCamera.enabled = false;
+        ARViewCamera.gameObject.SetActive(false);
         VRViewCamera.enabled = false;
         InteractableViewCamera.enabled = false;
         DigitLockViewCamera.enabled = false;
@@ -237,7 +237,8 @@ public class GameController : MonoBehaviour {
     void ActivateARViewCamera()
     {
         DisableAllCameras();
-        ARViewCamera.enabled = true;
+        //ARViewCamera.enabled = true;
+        ARViewCamera.gameObject.SetActive(true);
     }
 
     void ActivateVRViewCamera()
