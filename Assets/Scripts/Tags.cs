@@ -11,4 +11,5 @@ public class Tags {
     public const string DigitLock = "DigitLock";
     public const string Lockable = "Lockable";
     public const string Untagged = "Untagged";
+    public const string Switch = "Switch";
 }

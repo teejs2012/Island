@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="zhen" size="14.000000 9.897377" />
+    <ImageTarget name="shaman" size="14.000000 9.897377" />
+    <ImageTarget name="lev" size="14.000000 9.897377" />
+    <ImageTarget name="zhen2" size="14.000000 9.897377" />
+    <ImageTarget name="zhen1" size="14.000000 9.897377" />
+    <ImageTarget name="dongxue" size="14.000000 9.897377" />
+    <ImageTarget name="tanxian3" size="14.000000 9.897377" />
+    <ImageTarget name="yulin2" size="14.000000 9.897377" />
+    <ImageTarget name="yulin1" size="14.000000 9.897377" />
+    <ImageTarget name="yanjiu2" size="14.000000 9.897377" />
+    <ImageTarget name="yanjiu1" size="14.000000 9.897377" />
+    <ImageTarget name="sizhe2" size="14.000000 9.897377" />
+    <ImageTarget name="sizhe1" size="14.000000 9.897377" />
+    <ImageTarget name="tanxian2" size="14.000000 9.897377" />
+    <ImageTarget name="tanxian1" size="14.000000 9.897377" />
+    <ImageTarget name="hulin2" size="14.000000 9.897377" />
+    <ImageTarget name="hulin1" size="14.000000 9.897377" />
+    <ImageTarget name="shanmin2" size="14.000000 9.897377" />
+    <ImageTarget name="shanmin1" size="14.000000 9.897377" />
+  </Tracking>
+</QCARConfig>

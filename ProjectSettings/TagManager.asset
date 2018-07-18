@@ -11,6 +11,7 @@ TagManager:
   - Breakable
   - DigitLock
   - Lockable
+  - Switch
   layers:
   - Default
   - TransparentFX

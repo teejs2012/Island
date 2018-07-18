@@ -87,6 +87,9 @@ public class GameController : MonoBehaviour {
                     case Tags.Lockable:
                         TryChangeStatus(hit.collider);
                         break;
+                    case Tags.Switch:
+                        TrySwitch(hit.collider);
+                        break;
                 }
             }
         }
@@ -105,6 +108,15 @@ public class GameController : MonoBehaviour {
         if (Input.GetMouseButtonDown(0))
         {
             CheckHit(ARViewCamera.ScreenPointToRay(Input.mousePosition));
+        }
+    }
+
+    void TrySwitch(Collider col)
+    {
+        var data = col.GetComponent<Switch>();
+        if(data != null)
+        {
+            data.ChangeStatus();
         }
     }
 
