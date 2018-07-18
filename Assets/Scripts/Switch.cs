@@ -5,20 +5,19 @@ using DentedPixel;
 
 public class Switch : MonoBehaviour {
 
-    [SerializeField]
-    Material targetMat;
-    [SerializeField]
-    GameObject switchButton;
-    [SerializeField]
-    float onRot;
-    [SerializeField]
-    float offRot;
-    [SerializeField]
-    bool isOn;
 
+    [SerializeField]
+    protected bool isOn;
+
+    protected bool isDoingSwitchAnimation = false;
 
     public void ChangeStatus()
     {
+        if (isDoingSwitchAnimation)
+        {
+            return;
+        }
+        isDoingSwitchAnimation = true;
         if (isOn)
         {
             SwitchOff();
@@ -29,16 +28,9 @@ public class Switch : MonoBehaviour {
         }
     }
 
-    void SwitchOn()
-    {
-        targetMat.EnableKeyword("_EMISSION");
-        LeanTween.rotateY(switchButton, onRot, 0.2f);
-        isOn = true;
-    }
-    void SwitchOff()
-    {
-        targetMat.DisableKeyword("_EMISSION");
-        LeanTween.rotateY(switchButton, offRot, 0.2f);
-        isOn = false;
-    }
+    virtual protected void SwitchOn() { }
+    virtual protected void SwitchOff() { }
+
+
+
 }
