@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class CustomGravity : MonoBehaviour {
@@ -10,8 +11,17 @@ public class CustomGravity : MonoBehaviour {
     Transform anchor;
     [SerializeField]
     Transform vuforiaCam;
-	// Use this for initialization
-	void Start () {
+
+    [Header("UI")]
+    public Text arCamX;
+    public Text arCamY;
+    public Text arCamZ;
+
+    public Text deviceX;
+    public Text deviceY;
+    public Text deviceZ;
+    // Use this for initialization
+    void Start () {
         //CameraDevice.Instance.StopAutoFocus();
         //if (Screen.orientation == ScreenOrientation.LandscapeLeft) {
         //	Debug.Log ("LEFT");
@@ -36,7 +46,17 @@ public class CustomGravity : MonoBehaviour {
             return;
         }
 
+        
         anchor.transform.rotation = gyro.attitude;
+        deviceX.text = anchor.transform.eulerAngles.x.ToString();
+        deviceY.text = anchor.transform.eulerAngles.y.ToString();
+        deviceZ.text = anchor.transform.eulerAngles.z.ToString();
+
+        arCamX.text = vuforiaCam.transform.eulerAngles.x.ToString();
+        arCamY.text = vuforiaCam.transform.eulerAngles.y.ToString();
+        arCamZ.text = vuforiaCam.transform.eulerAngles.z.ToString();
+
+
         Vector3 localDownVector = anchor.InverseTransformDirection(Vector3.down);
         Vector3 gravityDir = vuforiaCam.TransformDirection(localDownVector);
         //CameraDevice.Instance.StopAutoFocus();
