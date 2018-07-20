@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class VRViewCameraController : MonoBehaviour {
 
@@ -10,7 +11,13 @@ public class VRViewCameraController : MonoBehaviour {
     [SerializeField]
     GameController gameController;
     State currentState;
+    CinemachineBrain cinemachineBrain;
     // Use this for initialization
+    void Awake()
+    {
+        cinemachineBrain = GetComponent<CinemachineBrain>();
+    }
+
     void Start()
     {
         gameController.BroadcastState += UpdateCurrentState;
@@ -40,6 +47,26 @@ public class VRViewCameraController : MonoBehaviour {
     {
         cameraPitch = transform.eulerAngles.x;
         cameraYaw = transform.eulerAngles.y;
+    }
+
+    public void SwitchToVRView(Transform currentARCamTransform, CinemachineBlendListCamera blendListCam)
+    {
+        SetTransform(currentARCamTransform, blendListCam.ChildCameras[0].transform);
+        blendListCam.enabled = true;
+        foreach(CinemachineVirtualCamera child in blendListCam.ChildCameras)
+        {
+            var trackedDolly = child.GetCinemachineComponent<CinemachineTrackedDolly>();
+            if (trackedDolly != null)
+            {
+                LeanTween.value(0, 1, 2).setOnUpdate((float x) => { trackedDolly.m_PathPosition = x; });
+            }
+        }
+    }
+
+    void SetTransform(Transform from, Transform to)
+    {
+        to.position = from.position;
+        to.eulerAngles = from.eulerAngles;
     }
 
     void MoveNormalViewCamera()

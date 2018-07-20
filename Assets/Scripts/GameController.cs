@@ -153,18 +153,24 @@ public class GameController : MonoBehaviour {
         if(CurrentState == State.ARView)
         {
             CurrentState = State.VRView;
-            VRViewCamera.transform.position = ARViewCamera.transform.position;
-            VRViewCamera.transform.rotation = ARViewCamera.transform.rotation;
             ActivateVRViewCamera();
             var data = col.GetComponent<ARVRSwitchData>();
-            if(data != null)
+            if (data != null)
             {
-                currentVRScene = data.TargetVRScene;
-                currentVRScene.SetActive(true);
-
-                LeanTween.move(VRViewCamera.gameObject, data.TargetPosition, 1);
-                LeanTween.rotate(VRViewCamera.gameObject, data.TargetRotation, 1);
+                VRViewCamera.GetComponent<VRViewCameraController>().SwitchToVRView(ARViewCamera.transform, data.blendListCam);
             }
+            //VRViewCamera.transform.position = ARViewCamera.transform.position;
+            //VRViewCamera.transform.rotation = ARViewCamera.transform.rotation;
+            //ActivateVRViewCamera();
+            //var data = col.GetComponent<ARVRSwitchData>();
+            //if(data != null)
+            //{
+            //    currentVRScene = data.TargetVRScene;
+            //    currentVRScene.SetActive(true);
+
+                //    LeanTween.move(VRViewCamera.gameObject, data.TargetPosition, 1);
+                //    LeanTween.rotate(VRViewCamera.gameObject, data.TargetRotation, 1);
+                //}
         }
         else
         {
