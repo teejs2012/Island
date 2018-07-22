@@ -12,4 +12,6 @@ public class Tags {
     public const string Lockable = "Lockable";
     public const string Untagged = "Untagged";
     public const string Switch = "Switch";
+    public const string Key = "Key";
+    public const string KeyLock = "KeyLock";
 }

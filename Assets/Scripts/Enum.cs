@@ -7,3 +7,8 @@ public enum State
 {
     ARView, VRView,InteractableView, BookView, DigitLockView
 }
+
+public enum ColorKey
+{
+    RedKey, BlueKey, LastKey
+}

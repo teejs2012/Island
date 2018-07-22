@@ -12,6 +12,8 @@ TagManager:
   - DigitLock
   - Lockable
   - Switch
+  - Key
+  - KeyLock
   layers:
   - Default
   - TransparentFX

@@ -1,6 +1,7 @@
 ﻿
 using UnityEngine;
 using DentedPixel;
+using System;
 
 public class Dissolvable : MonoBehaviour {
 
@@ -16,7 +17,7 @@ public class Dissolvable : MonoBehaviour {
         col = GetComponent<Collider>();
     }
 
-	public void Dissolve(float time)
+	public void Dissolve(float time, Action action = null)
     {
         if (meshRenderer != null)
         {
@@ -29,7 +30,9 @@ public class Dissolvable : MonoBehaviour {
                 (float x) =>
                 {
                     material.SetFloat(dissolveReference, x);
-                });
+                }).setOnComplete(
+                    () => { if (action != null) action(); }
+                );
         }
 
         if(col != null)

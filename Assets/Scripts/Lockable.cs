@@ -6,7 +6,7 @@ using DentedPixel;
 public class Lockable : Triggerable {
 
     [SerializeField]
-    DigitLockData targetLock;
+    GameObject targetLock;
     [SerializeField]
     bool isLocked = true;
 
@@ -32,7 +32,15 @@ public class Lockable : Triggerable {
     {
         isTriggered = true;
         isLocked = false;
-        Destroy(targetLock.gameObject);
+        var dissolvable = targetLock.GetComponent<Dissolvable>();
+        if (dissolvable != null)
+        {
+            dissolvable.Dissolve(1, () => { Destroy(targetLock); });
+        }
+        else
+        {
+            Destroy(targetLock);
+        }
         Open();
     }
 
@@ -40,7 +48,7 @@ public class Lockable : Triggerable {
     {
         isTriggered = true;
         isLocked = false;
-        Destroy(targetLock.gameObject);
+        Destroy(targetLock);
     }
 
     public void ChangeStatus()
@@ -65,7 +73,7 @@ public class Lockable : Triggerable {
         if (!isShaking)
         {
             isShaking = true;
-            LeanTween.rotateAround(targetLock.gameObject, Vector3.up, 10, 0.5f).setEaseShake().setOnComplete(()=> { isShaking = false; });
+            LeanTween.rotateAround(targetLock, Vector3.up, 10, 0.5f).setEaseShake().setOnComplete(()=> { isShaking = false; });
         }
     }
 

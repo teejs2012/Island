@@ -22,10 +22,15 @@ public class GameController : MonoBehaviour {
     public Camera InteractableViewCamera;
     public Camera DigitLockViewCamera;
 
+    Camera currentCamera;
+
     [SerializeField]
     UIManager UIManager;
     [SerializeField]
-    LockSystem LockSystem;
+    DigitLockSystem DigitLockSystem;
+    [SerializeField]
+    KeyLockSystem KeyLockSystem;
+
     //For Interactable
     GameObject currentGO;
     Vector3 originalGOPosition;
@@ -40,6 +45,11 @@ public class GameController : MonoBehaviour {
     public delegate void ReturnState(State state);
     public event ReturnState BroadcastState;
 
+
+    void Start()
+    {
+        currentCamera = ARViewCamera;
+    }
     // Update is called once per frame
     void Update () {
         switch (CurrentState)
@@ -90,6 +100,12 @@ public class GameController : MonoBehaviour {
                     case Tags.Switch:
                         TrySwitch(hit.collider);
                         break;
+                    case Tags.Key:
+                        TryActivateKey(hit.collider);
+                        break;
+                    case Tags.KeyLock:
+                        TryUnlockKeyLock(hit.collider);
+                        break;
                 }
             }
         }
@@ -108,6 +124,24 @@ public class GameController : MonoBehaviour {
         if (Input.GetMouseButtonDown(0))
         {
             CheckHit(ARViewCamera.ScreenPointToRay(Input.mousePosition));
+        }
+    }
+
+    void TryUnlockKeyLock(Collider col)
+    {
+        var data = col.GetComponent<KeyLockData>();
+        if (data != null)
+        {
+            KeyLockSystem.TryUnlock(data);
+        }
+    }
+
+    void TryActivateKey(Collider col)
+    {
+        var data = col.GetComponent<KeyData>();
+        if(data != null)
+        {
+            KeyLockSystem.ActivateKey(data.KeyColor,col.gameObject, currentCamera);
         }
     }
 
@@ -150,14 +184,17 @@ public class GameController : MonoBehaviour {
 
     void SwitchARVRView(Collider col)
     {
-        if(CurrentState == State.ARView)
+        var vrConroller = VRViewCamera.GetComponent<VRViewCameraController>();
+        if (vrConroller.IsDoingSwitch)
+            return;
+        if (CurrentState == State.ARView)
         {
             CurrentState = State.VRView;
-            ActivateVRViewCamera();
+            SwitchToCamera(VRViewCamera);
             var data = col.GetComponent<ARVRSwitchData>();
             if (data != null)
             {
-                VRViewCamera.GetComponent<VRViewCameraController>().SwitchToVRView(ARViewCamera.transform, data.blendListCam);
+                vrConroller.SwitchToVRView(ARViewCamera.transform, data.blendListCam);
             }
             //VRViewCamera.transform.position = ARViewCamera.transform.position;
             //VRViewCamera.transform.rotation = ARViewCamera.transform.rotation;
@@ -178,7 +215,7 @@ public class GameController : MonoBehaviour {
                     () =>
                     {
                         CurrentState = State.ARView;
-                        ActivateARViewCamera();
+                        SwitchToCamera(ARViewCamera);
                         if (currentVRScene != null)
                         {
                             currentVRScene.SetActive(false);
@@ -193,10 +230,10 @@ public class GameController : MonoBehaviour {
         var data = col.gameObject.GetComponent<DigitLockData>();
         if(data != null)
         {
-            LockSystem.Initialize(data);
+            DigitLockSystem.Initialize(data);
             UIManager.ShowLockUI();
             CurrentState = State.DigitLockView;
-            ActivateLockViewCamera();
+            SwitchToCamera(DigitLockViewCamera);
         }
     }
 
@@ -207,7 +244,7 @@ public class GameController : MonoBehaviour {
         {
             UIManager.ShowBookUI(data.Pages);
             CurrentState = State.BookView;
-            ActivateInteractableViewCamera();
+            SwitchToCamera(InteractableViewCamera);
         }
     }
 
@@ -228,7 +265,7 @@ public class GameController : MonoBehaviour {
         UIManager.ShowInteractableViewUI();
 
         CurrentState = State.InteractableView;
-        ActivateInteractableViewCamera();
+        SwitchToCamera(InteractableViewCamera);
     }
 
     #region Camera
@@ -240,29 +277,18 @@ public class GameController : MonoBehaviour {
         DigitLockViewCamera.enabled = false;
     }
 
-    void ActivateARViewCamera()
+    void SwitchToCamera(Camera cam)
     {
         DisableAllCameras();
-        //ARViewCamera.enabled = true;
-        ARViewCamera.gameObject.SetActive(true);
-    }
-
-    void ActivateVRViewCamera()
-    {
-        DisableAllCameras();
-        VRViewCamera.enabled = true;
-    }
-
-    void ActivateInteractableViewCamera()
-    {
-        DisableAllCameras();
-        InteractableViewCamera.enabled = true;
-    }
-
-    void ActivateLockViewCamera()
-    {
-        DisableAllCameras();
-        DigitLockViewCamera.enabled = true;
+        if(cam == ARViewCamera)
+        {
+            cam.gameObject.SetActive(true);
+        }
+        else
+        {
+            cam.enabled = true;
+        }
+        currentCamera = cam;
     }
     #endregion
 
@@ -278,7 +304,7 @@ public class GameController : MonoBehaviour {
             currentGO = null;
         }
         CurrentState = State.ARView;
-        ActivateARViewCamera();
+        SwitchToCamera(ARViewCamera);
     }
 
     void SaveGOTransform(Transform t)

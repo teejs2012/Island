@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using System.Xml.Serialization;
 using System.IO;
 
-public class StatusManager : MonoBehaviour{
+public class StatusManager{
 
 
     static string fileName = "gamedata.json";
@@ -16,7 +15,7 @@ public class StatusManager : MonoBehaviour{
     {
         GameData data = new GameData();
 
-        foreach(var triggerable in FindObjectsOfType<Triggerable>())
+        foreach(var triggerable in GameObject.FindObjectsOfType<Triggerable>())
         {
             if (triggerable.IsTriggered)
             {
