@@ -43,6 +43,7 @@ public class GameController : MonoBehaviour {
     Quaternion originalGORotation;
     Vector3 originalGOScale;
     string originalTag;
+    Transform originalParent;
 
     public delegate void ReturnState(State state);
     public event ReturnState BroadcastState;
@@ -209,7 +210,7 @@ public class GameController : MonoBehaviour {
         {
             DigitLockSystem.Initialize(data);
             UIManager.ShowDigitLockUI();
-            UIManager.ShowBackButton(SwitchToARView, UIManager.HideDigitLockUI);
+            UIManager.ShowBackButton(GetSwitchBackFunction(), UIManager.HideDigitLockUI);
             CurrentState = State.DigitLockView;
             SwitchToCamera(DigitLockViewCamera);
         }
@@ -221,7 +222,7 @@ public class GameController : MonoBehaviour {
         if (data != null)
         {
             UIManager.ShowBookUI(data.Pages);
-            UIManager.ShowBackButton(SwitchToARView, UIManager.HideBookUI);
+            UIManager.ShowBackButton(GetSwitchBackFunction(), UIManager.HideBookUI);
             CurrentState = State.BookView;
             SwitchToCamera(InteractableViewCamera);
         }
@@ -242,7 +243,7 @@ public class GameController : MonoBehaviour {
             paperData.content.gameObject.SetActive(true);
         }
 
-        UIManager.ShowBackButton(RestoreGOFromInteractableView, SwitchToARView, () => { paperData.content.gameObject.SetActive(false); });
+        UIManager.ShowBackButton(RestoreGOFromInteractableView, GetSwitchBackFunction(), () => { paperData.content.gameObject.SetActive(false); });
 
         CurrentState = State.PaperView;
         SwitchToCamera(InteractableViewCamera);
@@ -252,25 +253,36 @@ public class GameController : MonoBehaviour {
     {
         PrepareGOForInteractableView(col.gameObject);
 
-        UIManager.ShowBackButton(RestoreGOFromInteractableView, SwitchToARView);
+        UIManager.ShowBackButton(RestoreGOFromInteractableView, GetSwitchBackFunction());
 
         CurrentState = State.InteractableView;
         SwitchToCamera(InteractableViewCamera);
     }
 
-    void PrepareGOForInteractableView(GameObject go)
+    UnityEngine.Events.UnityAction GetSwitchBackFunction()
     {
-        currentGO = go;
-        SaveGOTransform(currentGO.transform);
-        InteractableData data = currentGO.GetComponent<InteractableData>();
-        if (data != null)
+        if(CurrentState == State.ARView)
         {
-            currentGO.transform.position = data.Position;
-            currentGO.transform.rotation = data.Rotation;
-            currentGO.transform.localScale = data.Scale;
-            currentGO.tag = Tags.Untagged;
+            return SwitchToARView;
+        }
+        else
+        {
+            return SwitchToVRView;
         }
     }
+
+    void SwitchToARView()
+    {
+        CurrentState = State.ARView;
+        SwitchToCamera(ARViewCamera);
+    }
+
+    void SwitchToVRView()
+    {
+        CurrentState = State.VRView;
+        SwitchToCamera(VRViewCamera);
+    }
+
 
     #region Camera
     void DisableAllCameras()
@@ -296,8 +308,24 @@ public class GameController : MonoBehaviour {
     }
     #endregion
 
+    void PrepareGOForInteractableView(GameObject go)
+    {
+        currentGO = go;
+        SaveGOTransform(currentGO.transform);
+        InteractableData data = currentGO.GetComponent<InteractableData>();
+        if (data != null)
+        {
+            currentGO.transform.SetParent(null);
+            currentGO.transform.position = data.Position;
+            currentGO.transform.rotation = data.Rotation;
+            currentGO.transform.localScale = data.Scale;
+            currentGO.tag = Tags.Untagged;
+        }
+    }
+
     void RestoreGOFromInteractableView()
     {
+        currentGO.transform.SetParent(originalParent);
         currentGO.transform.position = originalGOPosition;
         currentGO.transform.rotation = originalGORotation;
         currentGO.transform.localScale = originalGOScale;
@@ -305,11 +333,6 @@ public class GameController : MonoBehaviour {
         currentGO = null;
     }
 
-    void SwitchToARView()
-    {
-        CurrentState = State.ARView;
-        SwitchToCamera(ARViewCamera);
-    }
 
     #region helper functions
     void SaveGOTransform(Transform t)
@@ -318,6 +341,7 @@ public class GameController : MonoBehaviour {
         originalGORotation = t.rotation;
         originalGOScale = t.localScale;
         originalTag = t.tag;
+        originalParent = t.parent;
     }
     #endregion
 }

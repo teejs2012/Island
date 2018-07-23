@@ -26,15 +26,11 @@ public class VRViewCameraController : MonoBehaviour {
     void UpdateCurrentState(State state)
     {
         currentState = state;
-        if(currentState == State.VRView)
-        {
-            InitVRViewCamera();
-        }
     }
     // Update is called once per frame
     void Update()
     {
-        if (currentState == State.VRView)
+        if (currentState == State.VRView && !IsDoingSwitch)
         {
             MoveNormalViewCamera();
         }
@@ -43,18 +39,14 @@ public class VRViewCameraController : MonoBehaviour {
     float cameraPitch = 0;
     float cameraYaw = 0;
 
-    public void InitVRViewCamera()
-    {
-        cameraPitch = transform.eulerAngles.x;
-        cameraYaw = transform.eulerAngles.y;
-    }
-
     List<CinemachineVirtualCamera> camWithTrackedDolly = new List<CinemachineVirtualCamera>();
+    Transform currentCam = null;
 
     public void SwitchToVRView(Transform currentARCamTransform, CinemachineBlendListCamera blendListCam)
     {
         if (isDoingSwitch)
             return;
+
         SetTransform(currentARCamTransform, blendListCam.ChildCameras[0].transform);
         blendListCam.enabled = true;
         foreach(CinemachineVirtualCamera child in blendListCam.ChildCameras)
@@ -80,7 +72,6 @@ public class VRViewCameraController : MonoBehaviour {
             
             if (blendListCam.IsLiveChild(camWithTrackedDolly[i]))
             {
-                Debug.Log("affecting");
                 var trackedDolly = camWithTrackedDolly[i].GetCinemachineComponent<CinemachineTrackedDolly>();
                 LeanTween.value(0, 1, 2).setOnUpdate((float x) => { trackedDolly.m_PathPosition = x; });
                 i++;
@@ -95,6 +86,11 @@ public class VRViewCameraController : MonoBehaviour {
             yield return null;
         }
         isDoingSwitch = false;
+
+        int lastCamInd = blendListCam.ChildCameras.Length - 1;
+        currentCam = blendListCam.ChildCameras[lastCamInd].transform;
+        cameraPitch = currentCam.transform.eulerAngles.x;
+        cameraYaw = currentCam.transform.eulerAngles.y;
     }
 
     void SetTransform(Transform from, Transform to)
@@ -111,7 +107,7 @@ public class VRViewCameraController : MonoBehaviour {
         {
             cameraYaw += Input.GetAxis("Mouse X") * RotationSpeed;
             cameraPitch -= Input.GetAxis("Mouse Y") * RotationSpeed;
-            transform.eulerAngles = new Vector3(cameraPitch, cameraYaw, 0);
+            currentCam.transform.eulerAngles = new Vector3(cameraPitch, cameraYaw, 0);
         }
     }
 }
