@@ -23,6 +23,22 @@ public class StatusManager{
             }
         }
 
+        var keyLockSystem = GameObject.FindObjectOfType<KeyLockSystem>();
+        //Debug.Log("keylocksystem is null : " + keyLockSystem == null);
+        if(keyLockSystem != null)
+        {
+            foreach(int keyColor in keyLockSystem.ActivatedKeys)
+            {
+                data.ActiveKeys.Add(keyColor);
+            }
+            foreach(int keyColor in keyLockSystem.UsedKeys)
+            {
+                data.UsedKeys.Add(keyColor);
+            }
+        }
+
+        Debug.Log(data.ToString());
+
         string dataString = JsonUtility.ToJson(data);
 
         string path = Path.Combine(Application.persistentDataPath, fileName);
@@ -46,6 +62,28 @@ public class StatusManager{
                     if(triggerable != null)
                     {
                         triggerable.Trigger();
+                    }
+                }
+            }
+
+            var keyLockSystem = GameObject.FindObjectOfType<KeyLockSystem>();
+            if (keyLockSystem != null)
+            {
+                foreach(int keyColor in data.ActiveKeys)
+                {
+                    keyLockSystem.SetActivatedKey((ColorKey)keyColor);
+                }
+
+                foreach(int keyColor in data.UsedKeys)
+                {
+                    keyLockSystem.SetUsedKey((ColorKey)keyColor);
+                }
+
+                foreach(var key in GameObject.FindObjectsOfType<KeyData>())
+                {
+                    if(data.ActiveKeys.Contains((int)key.KeyColor) || data.UsedKeys.Contains((int)key.KeyColor))
+                    {
+                        GameObject.Destroy(key.gameObject);
                     }
                 }
             }

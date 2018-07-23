@@ -14,4 +14,5 @@ public class Tags {
     public const string Switch = "Switch";
     public const string Key = "Key";
     public const string KeyLock = "KeyLock";
+    public const string Paper = "Paper";
 }

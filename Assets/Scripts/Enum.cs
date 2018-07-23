@@ -5,7 +5,7 @@ using UnityEngine;
 
 public enum State
 {
-    ARView, VRView,InteractableView, BookView, DigitLockView
+    ARView, VRView,InteractableView, BookView, DigitLockView, PaperView
 }
 
 public enum ColorKey

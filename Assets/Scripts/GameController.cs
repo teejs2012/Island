@@ -4,7 +4,7 @@ using UnityEngine;
 using DentedPixel;
 
 public class GameController : MonoBehaviour {
-    State currentState = State.ARView;
+    State currentState;
     State CurrentState
     {
         get { return currentState; }
@@ -30,17 +30,19 @@ public class GameController : MonoBehaviour {
     DigitLockSystem DigitLockSystem;
     [SerializeField]
     KeyLockSystem KeyLockSystem;
+    [SerializeField]
+    TextHandler TextHandler;
 
     //For Interactable
     GameObject currentGO;
+    public GameObject CurrentGO
+    {
+        get { return currentGO; }
+    }
     Vector3 originalGOPosition;
     Quaternion originalGORotation;
     Vector3 originalGOScale;
-    Vector3 center;
-    Transform currentGOTransform;
-
-    [Header("Params")]
-    public float movespeed;
+    string originalTag;
 
     public delegate void ReturnState(State state);
     public event ReturnState BroadcastState;
@@ -49,29 +51,30 @@ public class GameController : MonoBehaviour {
     void Start()
     {
         currentCamera = ARViewCamera;
+        CurrentState = State.ARView;
     }
-    // Update is called once per frame
+
     void Update () {
-        switch (CurrentState)
+        if (Input.GetMouseButtonDown(0))
         {
-            case State.ARView:
-                ARViewUpdate();
-                break;
-            case State.VRView:
-                VRViewUpdate();
-                break;
-            case State.InteractableView:
-                InteractableViewUpdate();
-                break;
-            case State.BookView:
-            case State.DigitLockView:
-                break;
-            
-        }		
+            if(CurrentState == State.ARView)
+            {
+                CheckHit(ARViewCamera);
+            }
+            else if(CurrentState == State.VRView)
+            {
+                CheckHit(VRViewCamera);
+            }
+            else if(CurrentState == State.InteractableView)
+            {
+                CheckHit(InteractableViewCamera);
+            }
+        }	
 	}
 
-    void CheckHit(Ray ray)
+    void CheckHit(Camera cam)
     {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
@@ -106,24 +109,11 @@ public class GameController : MonoBehaviour {
                     case Tags.KeyLock:
                         TryUnlockKeyLock(hit.collider);
                         break;
+                    case Tags.Paper:
+                        SwitchToPaperView(hit.collider);
+                        break;
                 }
             }
-        }
-    }
-
-    void VRViewUpdate()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            CheckHit(VRViewCamera.ScreenPointToRay(Input.mousePosition));
-        }
-    }
-
-    void ARViewUpdate()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            CheckHit(ARViewCamera.ScreenPointToRay(Input.mousePosition));
         }
     }
 
@@ -173,7 +163,6 @@ public class GameController : MonoBehaviour {
     void TryBreak(Collider col, Vector3 direction)
     {
         var data = col.GetComponentInParent<BreakableData>();
-        //var rigidbody = col.GetComponent<Rigidbody>();
         if (data != null)
         {
             data.TryBreak();
@@ -196,18 +185,6 @@ public class GameController : MonoBehaviour {
             {
                 vrConroller.SwitchToVRView(ARViewCamera.transform, data.blendListCam);
             }
-            //VRViewCamera.transform.position = ARViewCamera.transform.position;
-            //VRViewCamera.transform.rotation = ARViewCamera.transform.rotation;
-            //ActivateVRViewCamera();
-            //var data = col.GetComponent<ARVRSwitchData>();
-            //if(data != null)
-            //{
-            //    currentVRScene = data.TargetVRScene;
-            //    currentVRScene.SetActive(true);
-
-                //    LeanTween.move(VRViewCamera.gameObject, data.TargetPosition, 1);
-                //    LeanTween.rotate(VRViewCamera.gameObject, data.TargetRotation, 1);
-                //}
         }
         else
         {
@@ -231,7 +208,8 @@ public class GameController : MonoBehaviour {
         if(data != null)
         {
             DigitLockSystem.Initialize(data);
-            UIManager.ShowLockUI();
+            UIManager.ShowDigitLockUI();
+            UIManager.ShowBackButton(SwitchToARView, UIManager.HideDigitLockUI);
             CurrentState = State.DigitLockView;
             SwitchToCamera(DigitLockViewCamera);
         }
@@ -243,15 +221,46 @@ public class GameController : MonoBehaviour {
         if (data != null)
         {
             UIManager.ShowBookUI(data.Pages);
+            UIManager.ShowBackButton(SwitchToARView, UIManager.HideBookUI);
             CurrentState = State.BookView;
             SwitchToCamera(InteractableViewCamera);
         }
     }
 
+    void SwitchToPaperView(Collider col)
+    {
+        PrepareGOForInteractableView(col.gameObject);
+
+        PaperData paperData = col.gameObject.GetComponent<PaperData>();
+        if(paperData != null)
+        {
+            int contentCount = paperData.texts.Count;
+            for(int i = 0; i< contentCount; i++)
+            {
+                paperData.texts[i].text = TextHandler.GetText(paperData.keyWords[i]);
+            }
+            paperData.content.gameObject.SetActive(true);
+        }
+
+        UIManager.ShowBackButton(RestoreGOFromInteractableView, SwitchToARView, () => { paperData.content.gameObject.SetActive(false); });
+
+        CurrentState = State.PaperView;
+        SwitchToCamera(InteractableViewCamera);
+    }
+
     void SwitchToInteractableView(Collider col)
     {
+        PrepareGOForInteractableView(col.gameObject);
 
-        currentGO = col.gameObject;
+        UIManager.ShowBackButton(RestoreGOFromInteractableView, SwitchToARView);
+
+        CurrentState = State.InteractableView;
+        SwitchToCamera(InteractableViewCamera);
+    }
+
+    void PrepareGOForInteractableView(GameObject go)
+    {
+        currentGO = go;
         SaveGOTransform(currentGO.transform);
         InteractableData data = currentGO.GetComponent<InteractableData>();
         if (data != null)
@@ -259,13 +268,8 @@ public class GameController : MonoBehaviour {
             currentGO.transform.position = data.Position;
             currentGO.transform.rotation = data.Rotation;
             currentGO.transform.localScale = data.Scale;
+            currentGO.tag = Tags.Untagged;
         }
-        center = currentGO.GetComponent<Collider>().bounds.center;
-        currentGOTransform = currentGO.transform;
-        UIManager.ShowInteractableViewUI();
-
-        CurrentState = State.InteractableView;
-        SwitchToCamera(InteractableViewCamera);
     }
 
     #region Camera
@@ -292,49 +296,28 @@ public class GameController : MonoBehaviour {
     }
     #endregion
 
-    public void SwitchToNormalView()
+    void RestoreGOFromInteractableView()
     {
-        if (CurrentState == State.InteractableView)
-        {
+        currentGO.transform.position = originalGOPosition;
+        currentGO.transform.rotation = originalGORotation;
+        currentGO.transform.localScale = originalGOScale;
+        currentGO.tag = originalTag;
+        currentGO = null;
+    }
 
-            //move back the interactable object
-            currentGO.transform.position = originalGOPosition;
-            currentGO.transform.rotation = originalGORotation;
-            currentGO.transform.localScale = originalGOScale;
-            currentGO = null;
-        }
+    void SwitchToARView()
+    {
         CurrentState = State.ARView;
         SwitchToCamera(ARViewCamera);
     }
 
+    #region helper functions
     void SaveGOTransform(Transform t)
     {
         originalGOPosition = t.position;
         originalGORotation = t.rotation;
         originalGOScale = t.localScale;
+        originalTag = t.tag;
     }
-
-    void InteractableViewUpdate()
-    {
-        if (Input.GetMouseButton(0))
-        {
-            float xrot = Input.GetAxis("Mouse X") * movespeed * Time.deltaTime;
-            float yrot = Input.GetAxis("Mouse Y") * movespeed * Time.deltaTime;
-            Vector3 objectDown = currentGOTransform.InverseTransformDirection(Vector3.down);
-            Vector3 objectLeft = currentGOTransform.InverseTransformDirection(Vector3.right);
-
-            currentGOTransform.RotateAround(center, currentGOTransform.forward, objectDown.z * xrot);
-            currentGOTransform.RotateAround(center, currentGOTransform.right, objectDown.x * xrot);
-            currentGOTransform.RotateAround(center, currentGOTransform.up, objectDown.y * xrot);
-
-            currentGOTransform.RotateAround(center, currentGOTransform.forward, objectLeft.z * yrot);
-            currentGOTransform.RotateAround(center, currentGOTransform.right, objectLeft.x * yrot);
-            currentGOTransform.RotateAround(center, currentGOTransform.up, objectLeft.y * yrot);
-        }
-        if (Input.GetAxis("Mouse ScrollWheel") != 0)
-        {
-            currentGOTransform.transform.localScale = currentGOTransform.localScale * (1 + Input.GetAxis("Mouse ScrollWheel"));
-        }
-    }
-
+    #endregion
 }

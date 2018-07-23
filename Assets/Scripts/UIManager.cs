@@ -7,7 +7,7 @@ public class UIManager : MonoBehaviour {
 
     
     [SerializeField]
-    Button InteractableViewBackButton;
+    Button BackButton;
     [SerializeField]
     GameObject bookVolume;
     [SerializeField]
@@ -27,9 +27,7 @@ public class UIManager : MonoBehaviour {
 
     void Start()
     {
-        InteractableViewBackButton.gameObject.SetActive(false);
-        InteractableViewBackButton.onClick.AddListener(gameController.SwitchToNormalView);
-        InteractableViewBackButton.onClick.AddListener(HideInteractableViewUI);
+        BackButton.gameObject.SetActive(false);
 
         book = bookVolume.GetComponentInChildren<Book>();
         bookVolume.SetActive(false);
@@ -39,38 +37,38 @@ public class UIManager : MonoBehaviour {
     {
         book.Initialize(pages);
         bookVolume.SetActive(true);
-
-        InteractableViewBackButton.gameObject.SetActive(true);
-        InteractableViewBackButton.onClick.AddListener(HideBook);
     }
 
-    void HideBook()
+    public void HideBookUI()
     {
         bookVolume.SetActive(false);
-        InteractableViewBackButton.onClick.RemoveListener(HideBook);
     }
 
-    public void ShowLockUI()
+    public void ShowDigitLockUI()
     {
         digitLockUI.SetActive(true);
-        InteractableViewBackButton.gameObject.SetActive(true);
-        InteractableViewBackButton.onClick.AddListener(HideLockUI);
     }
 
-    void HideLockUI()
+    public void HideDigitLockUI()
     {
         digitLockUI.SetActive(false);
-        InteractableViewBackButton.onClick.RemoveListener(HideLockUI);
     }
 
-    public void ShowInteractableViewUI()
+    public void ShowBackButton(params UnityEngine.Events.UnityAction[] actions)
     {
-        InteractableViewBackButton.gameObject.SetActive(true);
+        BackButton.gameObject.SetActive(true);
+        BackButton.onClick.RemoveAllListeners();
+        foreach(var action in actions)
+        {
+            BackButton.onClick.AddListener(action);
+        }
+
+        BackButton.onClick.AddListener(HideBackButton);
     }
 
-    void HideInteractableViewUI()
+    void HideBackButton()
     {
-        InteractableViewBackButton.gameObject.SetActive(false);
+        BackButton.gameObject.SetActive(false);
     }
 
     public void FadeScreenTransition(Action action)
@@ -88,6 +86,6 @@ public class UIManager : MonoBehaviour {
 
     public void ClickBackButton()
     {
-        InteractableViewBackButton.onClick.Invoke();
+        BackButton.onClick.Invoke();
     }
 }

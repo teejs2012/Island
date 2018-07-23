@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class KeyLockData : MonoBehaviour {
 
+    void Start()
+    {
+        tag = Tags.KeyLock;
+    }
+
     [SerializeField]
     ColorKey keyColor;
     public ColorKey KeyColor { get { return keyColor; } }
