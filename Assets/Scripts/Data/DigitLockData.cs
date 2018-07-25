@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DentedPixel;
 
+[RequireComponent(typeof(DigitLock))]
 public class DigitLockData : MonoBehaviour {
 
     [SerializeField]
@@ -10,6 +11,6 @@ public class DigitLockData : MonoBehaviour {
     public string TargetNumber { get { return targetNumber; } }
 
     [SerializeField]
-    Lockable targetLockable;
-    public Lockable TargetLockable { get { return targetLockable; } }
+    Openable targetOpenable;
+    public Openable TargetOpenable { get { return targetOpenable; } }
 }

@@ -82,21 +82,21 @@ public class KeyLockSystem : MonoBehaviour {
         activatedKeys.Add(key);
     }
 
-    public void TryUnlock(KeyLockData data)
+    public void TryUnlock(KeyLock keyLock)
     {
-        if (activatedKeys.Contains(data.KeyColor))
+        if (activatedKeys.Contains(keyLock.KeyColor))
         {
-            data.TargetLockable.Unlock();
-            int keyInd = (int)data.KeyColor;
-            activatedKeys.Remove(data.KeyColor);
-            usedKeys.Add(data.KeyColor);
+            keyLock.Unlock();
+            int keyInd = (int)keyLock.KeyColor;
+            activatedKeys.Remove(keyLock.KeyColor);
+            usedKeys.Add(keyLock.KeyColor);
             LeanTween.value(1, 0, keyUIAnimationTime).setOnUpdate((float x) => { allKeyImages[keyInd].fillAmount = x; }).setEaseOutCubic().setOnComplete(
                 () => { allKeyImages[keyInd].gameObject.SetActive(false); }
                 );
         }
         else
         {
-            data.TargetLockable.ShakeTargetLock();
+            keyLock.Shake();
         }
     }
 }

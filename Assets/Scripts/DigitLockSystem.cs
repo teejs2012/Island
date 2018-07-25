@@ -13,11 +13,11 @@ public class DigitLockSystem : MonoBehaviour {
     [SerializeField]
     RectTransform NumberContainer;
     [SerializeField]
-    GameObject UpArrow;
+    GameObject UpArrowPrototype;
     [SerializeField]
-    GameObject DownArrow;
+    GameObject DownArrowPrototype;
     [SerializeField]
-    GameObject NumberItem;
+    GameObject NumberItemPrototype;
 
     [Header("Lock 3D")]
     [SerializeField]
@@ -48,7 +48,7 @@ public class DigitLockSystem : MonoBehaviour {
     List<Button> DownArrowButtons = new List<Button>();
     List<Text> NumberTexts = new List<Text>();
 
-    DigitLockData currentDigitLock;
+    DigitLock currentDigitLock;
 	
     void OnUpArrowClicked(int i)
     {
@@ -61,7 +61,6 @@ public class DigitLockSystem : MonoBehaviour {
         NumberTexts[i].text = currentNumber.ToString();
         CheckNumber();
     }
-
     void OnDownArrowClicked(int i)
     {
         int currentNumber = Convert.ToInt32(NumberTexts[i].text);
@@ -87,27 +86,12 @@ public class DigitLockSystem : MonoBehaviour {
         }
     }
 
-    void HideAllButtons()
+    void Prepare3D(int number)
     {
         threeButtons.SetActive(false);
         fourButtons.SetActive(false);
         fiveButtons.SetActive(false);
-    }
-
-    public void Initialize(DigitLockData digitLock)
-    {
-        if(currentDigitLock != null && currentDigitLock == digitLock)
-        {
-            Debug.Log("same lock");
-            return;
-        }
-
-        currentDigitLock = digitLock;
-        this.targetNumber = currentDigitLock.TargetNumber;
-        int length = targetNumber.Length;
-
-        HideAllButtons();
-        switch (length)
+        switch (number)
         {
             case 3:
                 threeButtons.SetActive(true);
@@ -119,11 +103,13 @@ public class DigitLockSystem : MonoBehaviour {
                 fiveButtons.SetActive(true);
                 break;
         }
-
+    }
+    void PrepareUI(int number)
+    {
         UpArrowButtons.Clear();
         DownArrowButtons.Clear();
         NumberTexts.Clear();
-        foreach(RectTransform child in UpArrowContainer)
+        foreach (RectTransform child in UpArrowContainer)
         {
             Destroy(child.gameObject);
         }
@@ -136,12 +122,12 @@ public class DigitLockSystem : MonoBehaviour {
             Destroy(child.gameObject);
         }
 
-        UpArrow.SetActive(true);
-        DownArrow.SetActive(true);
-        NumberItem.SetActive(true);
-        for (int i = 0; i < length; i++)
+        UpArrowPrototype.SetActive(true);
+        DownArrowPrototype.SetActive(true);
+        NumberItemPrototype.SetActive(true);
+        for (int i = 0; i < number; i++)
         {
-            GameObject upArrowGO =  Instantiate(UpArrow, UpArrowContainer);
+            GameObject upArrowGO = Instantiate(UpArrowPrototype, UpArrowContainer);
             var upButton = upArrowGO.GetComponent<Button>();
             if (upButton != null)
             {
@@ -149,7 +135,7 @@ public class DigitLockSystem : MonoBehaviour {
                 upButton.onClick.AddListener(delegate { OnUpArrowClicked(UpArrowButtons.IndexOf(upButton)); });
             }
 
-            GameObject downArrowGO = Instantiate(DownArrow, DownArrowContainer);
+            GameObject downArrowGO = Instantiate(DownArrowPrototype, DownArrowContainer);
             var downButton = downArrowGO.GetComponent<Button>();
             if (downButton != null)
             {
@@ -157,7 +143,7 @@ public class DigitLockSystem : MonoBehaviour {
                 downButton.onClick.AddListener(delegate { OnDownArrowClicked(DownArrowButtons.IndexOf(downButton)); });
             }
 
-            GameObject numberItemGO =  Instantiate(NumberItem, NumberContainer);
+            GameObject numberItemGO = Instantiate(NumberItemPrototype, NumberContainer);
             var text = numberItemGO.GetComponent<Text>();
             if (text != null)
             {
@@ -165,21 +151,45 @@ public class DigitLockSystem : MonoBehaviour {
             }
         }
 
-        UpArrow.SetActive(false);
-        DownArrow.SetActive(false);
-        NumberItem.SetActive(false);
+        UpArrowPrototype.SetActive(false);
+        DownArrowPrototype.SetActive(false);
+        NumberItemPrototype.SetActive(false);
 
         foreach (var c in NumberTexts)
         {
             c.text = "0";
         }
+    }
+    void ResetLockAnimation()
+    {
         lockMaterial.SetFloat("Vector1_37B9DF73", 0);
         locktop.position.Set(locktop.position.x, lockedPosY, locktop.position.z);
         locktop.eulerAngles.Set(locktop.eulerAngles.x, lockedRotY, locktop.eulerAngles.z);
     }
 
+    public void Initialize(DigitLock digitLock)
+    {
+        if(currentDigitLock != null && currentDigitLock == digitLock)
+        {
+            Debug.Log("same lock");
+            return;
+        }
+
+        currentDigitLock = digitLock;
+        this.targetNumber = currentDigitLock.TargetNumber;
+        int length = targetNumber.Length;
+
+        Prepare3D(length);
+        PrepareUI(length);
+        ResetLockAnimation();
+
+        UIManager.ShowDigitLockUI();
+    }
+
+
     void DoUnlock()
     {
+        UIManager.HideDigitLockUI();
         LeanTween.moveLocalY(locktop.gameObject, unlockedPosY, 0.3f).setEaseOutElastic().setOnComplete(
                 () =>
                 {
@@ -193,7 +203,7 @@ public class DigitLockSystem : MonoBehaviour {
                         ()=>
                         {
                             UIManager.ClickBackButton();
-                            currentDigitLock.TargetLockable.Unlock();
+                            currentDigitLock.Unlock();
                             currentDigitLock = null;
                         });
                 }

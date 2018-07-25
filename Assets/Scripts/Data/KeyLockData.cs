@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(KeyLock))]
 public class KeyLockData : MonoBehaviour {
 
     void Start()
@@ -14,6 +15,6 @@ public class KeyLockData : MonoBehaviour {
     public ColorKey KeyColor { get { return keyColor; } }
 
     [SerializeField]
-    Lockable targetLockable;
-    public Lockable TargetLockable { get { return targetLockable; } }
+    Openable targetOpenable;
+    public Openable TargetOpenable { get { return targetOpenable; } }
 }

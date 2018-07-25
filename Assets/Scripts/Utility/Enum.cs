@@ -12,3 +12,9 @@ public enum ColorKey
 {
     RedKey, BlueKey, LastKey
 }
+
+public enum Axis
+{
+    x,y,z
+}
+

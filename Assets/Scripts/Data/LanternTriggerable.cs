@@ -1,15 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DentedPixel;
 
-public class BreakableData : Triggerable {
+public class LanternTriggerable : OneTimeTrigger
+{
 
-    int count = 0;
     [SerializeField]
-    int TotalCountToBreak;
-
-    [Header("Animation")]
+    Breakable breakable;
     [SerializeField]
     ParticleSystem fire;
     [SerializeField]
@@ -19,54 +16,30 @@ public class BreakableData : Triggerable {
     [SerializeField]
     GameObject tunnel;
     [SerializeField]
-    Vector3 fallPosition;
-    [SerializeField]
     float lanternFallTime;
     [SerializeField]
     float fireStartTime;
     [SerializeField]
     float fireEndTime;
 
-    bool doingAnimation = false;
-    public bool DoingAnimation { get { return doingAnimation; } }
-    //public float Force { get { return force; } }
-    public void TryBreak()
+    protected override void Awake()
     {
-        if (doingAnimation)
-        {
-            return;
-        }
-
-        count++;
-        if(count >= TotalCountToBreak)
-        {
-            DoBreak();
-        }
-        else
-        {
-            DoShake();
-        }
-    }
-
-    void DoShake()
-    {
-        doingAnimation = true;
-        LeanTween.rotateAround(lantern, Vector3.up, 5, 0.3f).setEaseShake().setOnComplete(() => { doingAnimation = false; });
-    }
-
-    void DoBreak()
-    {
-        isTriggered = true;
-        tag = Tags.Untagged;
-        StartCoroutine(DoAnimation());
+        base.Awake();
+        breakable.DoBreak += StartAnimation;
     }
 
     public override void Trigger()
     {
-        isTriggered = true;
+        RegisterStatus();
         lantern.SetActive(false);
         strawBed.gameObject.SetActive(false);
         tunnel.SetActive(true);
+    }
+
+    void StartAnimation()
+    {
+        RegisterStatus();
+        StartCoroutine(DoAnimation());
     }
 
     void DoLaternFall()
@@ -95,15 +68,12 @@ public class BreakableData : Triggerable {
 
     IEnumerator DoAnimation()
     {
-        doingAnimation = true;
         DoLaternFall();
         yield return new WaitForSeconds(lanternFallTime);
         DoFire();
         lantern.SetActive(false);
         tunnel.SetActive(true);
-        yield return new WaitForSeconds(fireStartTime +  fireEndTime + 1);
+        yield return new WaitForSeconds(fireStartTime + fireEndTime + 1);
         fire.gameObject.SetActive(false);
-        doingAnimation = false;
     }
-
 }

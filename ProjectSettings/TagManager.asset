@@ -10,11 +10,11 @@ TagManager:
   - ARVRSwitch
   - Breakable
   - DigitLock
-  - Lockable
   - Switch
   - Key
   - KeyLock
   - Paper
+  - Openable
   layers:
   - Default
   - TransparentFX

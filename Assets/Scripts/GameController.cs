@@ -98,9 +98,6 @@ public class GameController : MonoBehaviour {
                     case Tags.DigitLock:
                         SwitchDigitLockView(hit.collider);
                         break;
-                    case Tags.Lockable:
-                        TryChangeStatus(hit.collider);
-                        break;
                     case Tags.Switch:
                         TrySwitch(hit.collider);
                         break;
@@ -113,6 +110,9 @@ public class GameController : MonoBehaviour {
                     case Tags.Paper:
                         SwitchToPaperView(hit.collider);
                         break;
+                    case Tags.Openable:
+                        TryChangeStatus(hit.collider);
+                        break;
                 }
             }
         }
@@ -120,10 +120,10 @@ public class GameController : MonoBehaviour {
 
     void TryUnlockKeyLock(Collider col)
     {
-        var data = col.GetComponent<KeyLockData>();
-        if (data != null)
+        var keyLock = col.GetComponent<KeyLock>();
+        if (keyLock != null)
         {
-            KeyLockSystem.TryUnlock(data);
+            KeyLockSystem.TryUnlock(keyLock);
         }
     }
 
@@ -147,23 +147,16 @@ public class GameController : MonoBehaviour {
 
     void TryChangeStatus(Collider col)
     {
-        var data = col.GetComponent<Lockable>();
+        var data = col.GetComponent<Openable>();
         if(data != null)
         {
-            if (data.IsLocked)
-            {
-                data.ShakeTargetLock();
-            }
-            else
-            {
-                data.ChangeStatus();
-            }
+            data.ChangeStatus();
         }
     }
 
     void TryBreak(Collider col, Vector3 direction)
     {
-        var data = col.GetComponentInParent<BreakableData>();
+        var data = col.GetComponentInParent<Breakable>();
         if (data != null)
         {
             data.TryBreak();
@@ -205,10 +198,10 @@ public class GameController : MonoBehaviour {
 
     void SwitchDigitLockView(Collider col)
     {
-        var data = col.gameObject.GetComponent<DigitLockData>();
-        if(data != null)
+        var digitLock = col.gameObject.GetComponent<DigitLock>();
+        if(digitLock != null)
         {
-            DigitLockSystem.Initialize(data);
+            DigitLockSystem.Initialize(digitLock);
             UIManager.ShowDigitLockUI();
             UIManager.ShowBackButton(GetSwitchBackFunction(), UIManager.HideDigitLockUI);
             CurrentState = State.DigitLockView;
