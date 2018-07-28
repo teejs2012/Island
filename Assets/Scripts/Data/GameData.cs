@@ -8,7 +8,7 @@ public class GameData {
     public List<string> TriggeredObjects = new List<string>();
     public List<int> ActiveKeys = new List<int>();
     public List<int> UsedKeys = new List<int>();
-    public Dictionary<string, bool> Openables = new Dictionary<string, bool>();
+    public Dictionary<string, bool> OnOffStatusObjects = new Dictionary<string, bool>();
 
     public override string ToString() {
         StringBuilder result = new StringBuilder();

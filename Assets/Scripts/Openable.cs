@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Openable : MonoBehaviour {
+public abstract class Openable : OnOffStatusObject
+{
     LockableData lockableData;
     protected OpenableData openableData;
     bool isShaking = false;
@@ -10,11 +11,17 @@ public abstract class Openable : MonoBehaviour {
     public event System.Action CloseEvent = delegate { };
     public event System.Action OpenEvent = delegate { };
 
-    protected virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         openableData = GetComponent<OpenableData>();
         lockableData = GetComponent<LockableData>();
-        name += Utility.CreateMD5(transform.position.ToString());
+    }
+
+    public override void SetOpenableDataStatus(bool isOpen)
+    {
+        base.SetOpenableDataStatus(isOpen);
+        openableData.IsOpen = isOpen;
     }
 
     protected virtual void OnEnable()
@@ -35,19 +42,16 @@ public abstract class Openable : MonoBehaviour {
         }
     }
 
+    void OnDisable()
+    {
+        LeanTween.cancelAll();
+        resetIsChangeStatus();
+    }
+
     protected  abstract void SetOpen();
     protected abstract void SetClose();
 
-    void RegisterStatus()
-    {
-        StatusManager.Instance.RegisterAsOpenable(name, openableData.IsOpen);
-    }
 
-    public void SetOpenableDataStatus(bool isOpen)
-    {
-        openableData.IsOpen = isOpen;
-        RegisterStatus();
-    }
 
     void RevealContent()
     {
@@ -82,10 +86,13 @@ public abstract class Openable : MonoBehaviour {
         LeanTween.rotateAround(lockableData.TargetLock, Vector3.up, 10, 0.5f).setEaseShake().setOnComplete(() => { isShaking = false; });
     }
 
-    bool isChangingStatus = false;
-    public void ChangeStatus()
+
+    #region Dragging Code
+    bool isDragging = false;
+    Camera currentCam;
+    public void StartDrag(Camera cam)
     {
-        if(lockableData != null && lockableData.IsLocked)
+        if (lockableData != null && lockableData.IsLocked)
         {
             ShakeTargetLock();
             return;
@@ -96,17 +103,74 @@ public abstract class Openable : MonoBehaviour {
             return;
         }
 
-        isChangingStatus = true;
-        if (openableData.IsOpen)
+        isDragging = true;
+        currentCam = cam;
+    }
+
+    void Update()
+    {
+        if(isDragging)
         {
-            Close();
+            if (Input.GetMouseButtonUp(0))
+            {
+                isDragging = false;
+                ChangeStatus();
+                return;
+            }
+
+            DoDraggingControl();
         }
-        else
+    }
+
+    void DoDraggingControl()
+    {
+        float x = Input.GetAxis("Mouse X");
+        float y = Input.GetAxis("Mouse Y");
+
+        Vector3 movementInWorld = currentCam.transform.TransformVector(new Vector3(x, y, 0));
+        DoDraggingMovement(movementInWorld);
+    }
+
+    protected abstract void DoDraggingMovement(Vector3 dir);
+
+    protected float GetDragValue(Vector3 v)
+    {
+        float result = 0;
+        switch (openableData.DragAxis)
+        {
+            case Axis.x:
+                result = v.x;
+                break;
+            case Axis.y:
+                result = v.y;
+                break;
+            case Axis.z:
+                result = v.z;
+                break;
+        }
+
+        result *= (openableData.InvertDragEffect ? -1 : 1) * openableData.DragEffectSpeed;
+        return result;
+    }
+    #endregion
+
+    #region Animation Code
+    bool isChangingStatus = false;
+    void ChangeStatus()
+    {
+        isChangingStatus = true;
+        if (TendingToOpen())
         {
             Open();
         }
-        RegisterStatus();
+        else
+        {
+            Close();
+        }
+        RegisterStatus(openableData.IsOpen);
     }
+
+    protected abstract bool TendingToOpen();
 
     void Close()
     {
@@ -129,4 +193,6 @@ public abstract class Openable : MonoBehaviour {
 
     protected abstract void DoCloseAnimation(System.Action callback);
     protected abstract void DoOpenAnimation(System.Action callback);
+
+    #endregion
 }

@@ -150,7 +150,8 @@ public class GameController : MonoBehaviour {
         var data = col.GetComponent<Openable>();
         if(data != null)
         {
-            data.ChangeStatus();
+            //data.ChangeStatus();
+            data.StartDrag(currentCamera);
         }
     }
 

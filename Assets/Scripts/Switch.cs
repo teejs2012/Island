@@ -3,13 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using DentedPixel;
 
-public class Switch : MonoBehaviour {
-
-
+public abstract class Switch : OnOffStatusObject {
     [SerializeField]
     protected bool isOn;
+    [SerializeField]
+    protected float buttonSpeed;
+    [SerializeField]
+    protected float onValue;
+    [SerializeField]
+    protected float offValue;
 
     protected bool isDoingSwitchAnimation = false;
+
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
+    void OnEnable()
+    {
+        if (isOn)
+        {
+            SetOn();
+        }
+        else
+        {
+            SetOff();
+        }
+    }
+
+    void OnDisable()
+    {
+        StopAllCoroutines();
+        LeanTween.cancelAll();
+        isDoingSwitchAnimation = false;
+    }
+
+    protected abstract void SetOn();
+    protected abstract void SetOff();
 
     public void ChangeStatus()
     {
@@ -26,11 +57,15 @@ public class Switch : MonoBehaviour {
         {
             SwitchOn();
         }
+        RegisterStatus(isOn);
+    }
+
+    public override void SetOpenableDataStatus(bool isOn)
+    {
+        base.SetOpenableDataStatus(isOn);
+        this.isOn = isOn;
     }
 
     virtual protected void SwitchOn() { }
     virtual protected void SwitchOff() { }
-
-
-
 }

@@ -22,4 +22,15 @@ public class Utility  {
             return sb.ToString();
         }
     }
+
+    public static bool InRange(float target, float value1, float value2)
+    {
+        float maxValue = value1 > value2 ? value1 : value2;
+        float minValue = value1 > value2 ? value2 : value1;
+        if (target <= maxValue && target >= minValue)
+        {
+            return true;
+        }
+        return false;
+    }
 }

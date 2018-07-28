@@ -52,16 +52,16 @@ public class StatusManager : MonoBehaviour{
         data.UsedKeys.Add(keyColor);
     }
 
-    public void RegisterAsOpenable(string name, bool isOpen)
+    public void RegisterAsOnOffStatusObject(string name, bool isOpen)
     {
-        Debug.Log("Registering as openable");
-        if (data.Openables.ContainsKey(name))
+        //Debug.Log("Registering as openable");
+        if (data.OnOffStatusObjects.ContainsKey(name))
         {
-            data.Openables[name] = isOpen;
+            data.OnOffStatusObjects[name] = isOpen;
         }
         else
         {
-            data.Openables.Add(name, isOpen);
+            data.OnOffStatusObjects.Add(name, isOpen);
         }
     }
 
@@ -94,15 +94,15 @@ public class StatusManager : MonoBehaviour{
             }
         }
 
-        foreach(var pair in data.Openables)
+        foreach(var pair in data.OnOffStatusObjects)
         {
-            var openableGO = GameObject.Find(pair.Key);
-            if(openableGO != null)
+            var onOffStatusObjectGO = GameObject.Find(pair.Key);
+            if(onOffStatusObjectGO != null)
             {
-                var openable = openableGO.GetComponent<Openable>();
-                if(openable != null)
+                var onOffStatusObject = onOffStatusObjectGO.GetComponent<OnOffStatusObject>();
+                if(onOffStatusObject != null)
                 {
-                    openable.SetOpenableDataStatus(pair.Value);
+                    onOffStatusObject.SetOpenableDataStatus(pair.Value);
                 }
             }
         }

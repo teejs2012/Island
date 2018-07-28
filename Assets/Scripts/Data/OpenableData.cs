@@ -6,15 +6,27 @@ public class OpenableData : MonoBehaviour {
 
     [SerializeField]
     protected bool isOpen;
+
     [SerializeField]
-    float closeRot;
+    float closeValue;
     [SerializeField]
-    float openRot;
+    float openValue;
     [SerializeField]
     Axis axis;
 
+    [Header("Drag related")]
+    [SerializeField]
+    Axis dragAxis;
+    [SerializeField]
+    bool invertDragEffect;
+    [SerializeField]
+    float dragEffectSpeed = 1;
+
     public bool IsOpen { get { return isOpen; } set { isOpen = value; } }
-    public float CloseRot { get { return closeRot; } }
-    public float OpenRot { get { return openRot; } }
+    public float CloseValue { get { return closeValue; } }
+    public float OpenValue { get { return openValue; } }
     public Axis Axis { get { return axis; } }
+    public Axis DragAxis { get { return dragAxis; } }
+    public bool InvertDragEffect { get { return invertDragEffect; } }
+    public float DragEffectSpeed { get { return dragEffectSpeed; } }
 }

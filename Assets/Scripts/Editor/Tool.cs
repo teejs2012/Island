@@ -15,6 +15,7 @@ public class InteractableWindow : EditorWindow {
     Vector3 originalGOPosition;
     Quaternion originalGORotation;
     Vector3 originalGOScale;
+    Transform originalParent;
 
     private void OnGUI()
     {
@@ -28,6 +29,7 @@ public class InteractableWindow : EditorWindow {
             originalGOPosition = currentGO.transform.position;
             originalGORotation = currentGO.transform.rotation;
             originalGOScale = currentGO.transform.localScale;
+            originalParent = currentGO.transform.parent;
             var data = currentGO.GetComponent<InteractableData>();
             if(data == null)
             {
@@ -35,6 +37,7 @@ public class InteractableWindow : EditorWindow {
             }
             else
             {
+                currentGO.transform.SetParent(null);
                 currentGO.transform.position = data.Position;
                 currentGO.transform.rotation = data.Rotation;
                 currentGO.transform.localScale = data.Scale;
@@ -62,6 +65,7 @@ public class InteractableWindow : EditorWindow {
 
         if (GUILayout.Button("Back"))
         {
+            currentGO.transform.SetParent(originalParent);
             currentGO.transform.position = originalGOPosition;
             currentGO.transform.rotation = originalGORotation;
             currentGO.transform.localScale = originalGOScale;
