@@ -16,4 +16,5 @@ public class Tags {
     public const string KeyLock = "KeyLock";
     public const string Paper = "Paper";
     public const string Openable = "Openable";
+    //public const string ShadowPuzzle = "ShadowPuzzle";
 }

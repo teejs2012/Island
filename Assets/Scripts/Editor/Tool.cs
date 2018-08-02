@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using System.IO;
 
 #if UNITY_EDITOR
 public class InteractableWindow : EditorWindow {
@@ -142,6 +143,79 @@ public class DevelopmentViewMode
             trackable.transform.SetParent(imageTargetParent.transform);
             trackable.gameObject.SetActive(false);
         }
+    }
+}
+
+public class FileManagement
+{
+    const string directoryOfPrefabToOrganize = "Prefabs";
+    const string directoryNewPrefabSubFolder = "New";
+    const string targetMaterialParent = "TJS";
+    [MenuItem("TJS/Organize Materials")]
+    public static void OrganizeMaterials()
+    {
+        string pathToDirectoryOfPrefabToOrganize = Path.Combine(Application.dataPath, directoryOfPrefabToOrganize);
+        if (!Directory.Exists(pathToDirectoryOfPrefabToOrganize)) return;
+
+        DirectoryInfo dInfoOfPrefabToOrganize = new DirectoryInfo(pathToDirectoryOfPrefabToOrganize);
+        foreach(var prefabFileToOrganize in dInfoOfPrefabToOrganize.GetFiles())
+        {
+            if (prefabFileToOrganize.Name.Contains(".meta")) continue; //skip meta files
+            string fileNameWithoutExtension = prefabFileToOrganize.Name.Split('.')[0];
+            string targetMaterialPath = Application.dataPath + "/" + targetMaterialParent + "/" + fileNameWithoutExtension;
+            
+            if (!Directory.Exists(targetMaterialPath))
+            {
+                Directory.CreateDirectory(targetMaterialPath);
+            }
+            DirectoryInfo dinfoOfTargetMaterialPath = new DirectoryInfo(targetMaterialPath);
+
+
+            HashSet<string> nonRepeatedDependency = new HashSet<string>();
+            Dictionary<string, string> GUIDPair = new Dictionary<string, string>();
+            
+            foreach (string dependencyFile in AssetDatabase.GetDependencies("Assets" +"/"+ dInfoOfPrefabToOrganize.Name+"/"+prefabFileToOrganize.Name, true))
+            {
+                if (!nonRepeatedDependency.Contains(dependencyFile))
+                {
+                    nonRepeatedDependency.Add(dependencyFile);
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (!File.Exists(dependencyFile)) return;
+                FileInfo finfoOfDependencyFile = new FileInfo(dependencyFile);
+                if (finfoOfDependencyFile.Extension.Equals(".mat"))
+                {
+                    //skip if it is already in the target material folder
+                    if (finfoOfDependencyFile.Directory.Equals(dinfoOfTargetMaterialPath)) continue;
+
+                    string targetFileName = targetMaterialPath + "/" + finfoOfDependencyFile.Name;
+                    while (File.Exists(targetFileName))
+                    {
+                        targetFileName = targetMaterialPath + "/" + finfoOfDependencyFile.Name.Split('.')[0] + "0" + finfoOfDependencyFile.Extension;
+                    }
+                    string relativeTargetFilePath = targetFileName.Substring(targetFileName.IndexOf("Assets"));
+                    AssetDatabase.CopyAsset(dependencyFile, relativeTargetFilePath);
+                    GUIDPair.Add(AssetDatabase.AssetPathToGUID(dependencyFile), AssetDatabase.AssetPathToGUID(relativeTargetFilePath));
+                }
+            }
+
+            string prefabContent = File.ReadAllText(prefabFileToOrganize.FullName);
+            foreach(var pair in GUIDPair)
+            {
+                Debug.Log(string.Format("key is: {0} ; value is : {1};", pair.Key, pair.Value));
+                if (prefabContent.Contains(pair.Key))
+                {
+                    Debug.Log("prefabcontent contains key :" + pair.Key);
+                    prefabContent = prefabContent.Replace(pair.Key, pair.Value);
+                }
+            }
+            File.WriteAllText(pathToDirectoryOfPrefabToOrganize+"/"+directoryNewPrefabSubFolder +"/" + prefabFileToOrganize.Name, prefabContent);
+        }
+
     }
 }
 

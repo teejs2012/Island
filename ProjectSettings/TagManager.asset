@@ -15,6 +15,7 @@ TagManager:
   - KeyLock
   - Paper
   - Openable
+  - ShadowPuzzle
   layers:
   - Default
   - TransparentFX
