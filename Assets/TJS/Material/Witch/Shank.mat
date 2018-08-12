@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Shank
-  m_Shader: {fileID: 4800000, guid: 00a084dd4fa9c264f8767ac1ba859e9f, type: 3}
+  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_ShaderKeywords: _NORMALMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,15 +19,15 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture_1042B0AD:
-        m_Texture: {fileID: 2800000, guid: ebeb5137b0d8185408268dd716555fb5, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2fa24fb24eadcb447939889e356a1044, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture_A9B9246A:
-        m_Texture: {fileID: 2800000, guid: 630bb9b9522dba941a49352cf62938d8, type: 3}
+        m_Texture: {fileID: 2800000, guid: 7213326ee99b4b6499629bad3388fd8a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: ebeb5137b0d8185408268dd716555fb5, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2fa24fb24eadcb447939889e356a1044, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -47,7 +47,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 630bb9b9522dba941a49352cf62938d8, type: 3}
+        m_Texture: {fileID: 2800000, guid: 7213326ee99b4b6499629bad3388fd8a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -72,11 +72,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_37B9DF73: 0
-    - Vector1_434046FA: 0.12
+    - Vector1_434046FA: 1
     - Vector1_79BD1742: 0.02
     - _AlphaClip: 0
     - _Blend: 0
-    - _BumpScale: 1.5
+    - _BumpScale: 1
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -99,6 +99,6 @@ Material:
     - Color_883D6DD6: {r: 0.49056602, g: 0.46048415, b: 0.46048415, a: 0}
     - Color_F43F104A: {r: 0.26415092, g: 0.023673896, b: 0.023673896, a: 0}
     - Vector3_59DA22FC: {r: 70, g: 70, b: 70, a: 0}
-    - _Color: {r: 0.5754717, g: 0.5564703, b: 0.5564703, a: 1}
+    - _Color: {r: 0.754717, g: 0.7013172, b: 0.7013172, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}

@@ -14,6 +14,8 @@ public class KeyLockSystem : MonoBehaviour {
     Image RedKeyImage;
     [SerializeField]
     Image BlueKeyImage;
+    [SerializeField]
+    Image WhiteKeyImage;
 
     float keyObjectMoveAnimationTime = 1;
     float keyUIAnimationTime = 1;
@@ -28,6 +30,7 @@ public class KeyLockSystem : MonoBehaviour {
     {
         allKeyImages.Add(RedKeyImage);
         allKeyImages.Add(BlueKeyImage);
+        allKeyImages.Add(WhiteKeyImage);
         Assert.IsTrue(allKeyImages.Count == (int)ColorKey.LastKey);
     }
 
@@ -65,6 +68,9 @@ public class KeyLockSystem : MonoBehaviour {
 
         var col = keyGO.GetComponent<Collider>();
         if (col != null) col.enabled = false;
+
+        var rbody = keyGO.GetComponent<Rigidbody>();
+        if (rbody != null) Destroy(rbody);
 
         Image keyImage = allKeyImages[(int)key];
         keyImage.rectTransform.SetAsFirstSibling();
