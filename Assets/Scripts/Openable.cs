@@ -105,8 +105,8 @@ public abstract class Openable : OnOffStatusObject
 
         isDragging = true;
         currentCam = cam;
-        currentMouseX = Input.mousePosition.x;
-        currentMouseY = Input.mousePosition.y;
+        currentMouseX = UniformInput.Instance.GetPressPosition().x;
+        currentMouseY = UniformInput.Instance.GetPressPosition().y;
     }
 
     float currentMouseX = 0;
@@ -121,18 +121,16 @@ public abstract class Openable : OnOffStatusObject
     {
         if (isDragging)
         {
-            if (Input.GetMouseButtonUp(0))
+            if (UniformInput.Instance.GetPressUp())
             {
                 EndDrag();
                 return;
             }
 
-            //float x = Input.GetAxis("Mouse X");
-            //float y = Input.GetAxis("Mouse Y");
-            float deltaX = Input.mousePosition.x - currentMouseX;
-            float deltaY = Input.mousePosition.y - currentMouseY;
-            currentMouseX = Input.mousePosition.x;
-            currentMouseY = Input.mousePosition.y;
+            float deltaX = UniformInput.Instance.GetPressPosition().x - currentMouseX;
+            float deltaY = UniformInput.Instance.GetPressPosition().y - currentMouseY;
+            currentMouseX = UniformInput.Instance.GetPressPosition().x;
+            currentMouseY = UniformInput.Instance.GetPressPosition().y;
 
             Vector3 movementInWorld = currentCam.transform.TransformVector(new Vector3(deltaX, deltaY, 0));
             DoDraggingMovement(movementInWorld);

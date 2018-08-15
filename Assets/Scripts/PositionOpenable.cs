@@ -69,7 +69,7 @@ public class PositionOpenable : Openable {
         //transform.parent is a container for the rotationOpenable
         Vector3 movementInLocal = transform.parent.InverseTransformVector(dir).normalized;
         float dragValue = GetDragValue(movementInLocal);
-        Debug.Log("drag value is : " + dragValue);
+        //Debug.Log("drag value is : " + dragValue);
         Vector3 targetPosition = transform.localPosition;
         switch (openableData.Axis)
         {

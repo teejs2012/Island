@@ -91,6 +91,14 @@ public class StatusManager : MonoBehaviour{
                 {
                     triggerable.Trigger();
                 }
+
+                //bad practise.. 
+                //overlimitpositionopenable is also a traggerable but not inheret from onetimetrigger
+                var overlimit = triggerableGO.GetComponent<OverLimitPositionOpenable>();
+                if(overlimit != null)
+                {
+                    overlimit.Trigger();
+                }
             }
         }
 

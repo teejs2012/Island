@@ -14,6 +14,10 @@ public class InteractableViewController : MonoBehaviour {
     Vector3 center;
     Transform currentGOTransform;
 
+    bool limitUpDownRotation = false;
+    bool limitLeftRightRotation = false;
+    bool limitZoom = false;
+       
     void Start () {
         gameController.BroadcastState += UpdateCurrentState;
     }
@@ -32,6 +36,11 @@ public class InteractableViewController : MonoBehaviour {
         currentGO = gameController.CurrentGO;
         center = currentGO.GetComponent<Collider>().bounds.center;
         currentGOTransform = currentGO.transform;
+
+        InteractableData data = currentGO.GetComponent<InteractableData>();
+        limitUpDownRotation = data.limitUpDownRotation;
+        limitLeftRightRotation = data.limitLeftRightRotation;
+        limitZoom = data.limitZoom;
     }
 
     void Update()
@@ -40,24 +49,30 @@ public class InteractableViewController : MonoBehaviour {
         {
             return;
         }
-        if (Input.GetMouseButton(0))
+        if (UniformInput.Instance.GetPress())
         {
-            float xrot = Input.GetAxis("Mouse X") * moveSpeed * Time.deltaTime;
-            float yrot = Input.GetAxis("Mouse Y") * moveSpeed * Time.deltaTime;
+            float xrot = UniformInput.Instance.GetMouseX() * moveSpeed * Time.deltaTime;
+            float yrot = UniformInput.Instance.GetMouseY() * moveSpeed * Time.deltaTime;
             Vector3 objectDown = currentGOTransform.InverseTransformDirection(Vector3.down);
             Vector3 objectLeft = currentGOTransform.InverseTransformDirection(Vector3.right);
-
-            currentGOTransform.RotateAround(center, currentGOTransform.forward, objectDown.z * xrot);
-            currentGOTransform.RotateAround(center, currentGOTransform.right, objectDown.x * xrot);
-            currentGOTransform.RotateAround(center, currentGOTransform.up, objectDown.y * xrot);
-
-            currentGOTransform.RotateAround(center, currentGOTransform.forward, objectLeft.z * yrot);
-            currentGOTransform.RotateAround(center, currentGOTransform.right, objectLeft.x * yrot);
-            currentGOTransform.RotateAround(center, currentGOTransform.up, objectLeft.y * yrot);
+            if (!limitLeftRightRotation)
+            {
+                currentGOTransform.RotateAround(center, currentGOTransform.forward, objectDown.z * xrot);
+                currentGOTransform.RotateAround(center, currentGOTransform.right, objectDown.x * xrot);
+                currentGOTransform.RotateAround(center, currentGOTransform.up, objectDown.y * xrot);
+            }
+            if (!limitUpDownRotation)
+            {
+                currentGOTransform.RotateAround(center, currentGOTransform.forward, objectLeft.z * yrot);
+                currentGOTransform.RotateAround(center, currentGOTransform.right, objectLeft.x * yrot);
+                currentGOTransform.RotateAround(center, currentGOTransform.up, objectLeft.y * yrot);
+            }
         }
-        if (Input.GetAxis("Mouse ScrollWheel") != 0)
+
+        var zoomAmount = UniformInput.Instance.GetZoomAmount();
+        if (zoomAmount != 0 && !limitZoom)
         {
-            currentGOTransform.transform.localScale = currentGOTransform.localScale * (1 + Input.GetAxis("Mouse ScrollWheel")) * zoomSpeed;
+            currentGOTransform.transform.localScale = currentGOTransform.localScale * (1 + zoomAmount) * zoomSpeed;
         }
     }
 }

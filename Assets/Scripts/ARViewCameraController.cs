@@ -46,11 +46,6 @@ public class ARViewCameraController : MonoBehaviour {
         float moveY = (Input.GetKey(KeyCode.LeftShift)?0.5f:0) - (Input.GetKey(KeyCode.Space)?0.5f:0);
         transform.Translate(new Vector3(moveX, moveY, moveZ)* MoveSpeed);
 
-        //if (Input.GetMouseButtonDown(1))
-        //{
-        //    InitNormalViewCamera();
-        //}
-
         if (Input.GetMouseButton(1))
         {
             cameraYaw += Input.GetAxis("Mouse X") * RotationSpeed;

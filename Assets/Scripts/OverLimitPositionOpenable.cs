@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class OverLimitPositionOpenable : PositionOpenable {
 
+    bool pulledOff = false;
+
     protected override void DoDraggingMovement(Vector3 dir)
     {
+        if (pulledOff) return;
         //transform.parent is a container for the rotationOpenable
         Vector3 movementInLocal = transform.InverseTransformVector(dir).normalized;
         float dragValue = GetDragValue(movementInLocal);
@@ -58,7 +61,7 @@ public class OverLimitPositionOpenable : PositionOpenable {
             currentOverLimitAmount += 1;
             if(currentOverLimitAmount > targetOverLimitAmount)
             {
-                DoPullOff(pullDir);
+                DoPullOff(-pullDir);
             }
         }
     }
@@ -89,11 +92,24 @@ public class OverLimitPositionOpenable : PositionOpenable {
 
     void DoPullOff(Vector3 pullDir)
     {
+        StatusManager.Instance.RegisterAsTriggeredObject(name);
+        pulledOff = true;
         StopAllCoroutines();
         LeanTween.cancelAll();
         var rbody = gameObject.AddComponent<Rigidbody>();
-        rbody.AddForce(pullDir * forceAmount);
+        rbody.AddForce(transform.TransformVector(pullDir.normalized) * forceAmount);
         tag = Tags.Untagged;
+        //var dissolveComponent = GetComponent<Dissolvable>();
         Destroy(this);
+        //if (dissolveComponent != null)
+        //{
+        //    dissolveComponent.Dissolve(1, ()=> { Destroy(this.gameObject); });
+        //}
+    }
+
+    public void Trigger()
+    {
+        StatusManager.Instance.RegisterAsTriggeredObject(name);
+        Destroy(this.gameObject);
     }
 }

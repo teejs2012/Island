@@ -56,7 +56,7 @@ public class GameController : MonoBehaviour {
     }
 
     void Update () {
-        if (Input.GetMouseButtonDown(0))
+        if (UniformInput.Instance.GetPressDown())
         {
             if(CurrentState == State.ARView)
             {
@@ -75,7 +75,7 @@ public class GameController : MonoBehaviour {
 
     void CheckHit(Camera cam)
     {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = cam.ScreenPointToRay(UniformInput.Instance.GetPressPosition()); 
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {

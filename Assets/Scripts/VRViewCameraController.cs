@@ -11,12 +11,6 @@ public class VRViewCameraController : MonoBehaviour {
     [SerializeField]
     GameController gameController;
     State currentState;
-    CinemachineBrain cinemachineBrain;
-    // Use this for initialization
-    void Awake()
-    {
-        cinemachineBrain = GetComponent<CinemachineBrain>();
-    }
 
     void Start()
     {
