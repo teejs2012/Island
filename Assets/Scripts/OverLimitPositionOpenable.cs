@@ -89,6 +89,8 @@ public class OverLimitPositionOpenable : PositionOpenable {
     int currentOverLimitAmount = 0;
     [SerializeField]
     float forceAmount;
+    [SerializeField]
+    Vector3 pulledOffPosition;
 
     void DoPullOff(Vector3 pullDir)
     {

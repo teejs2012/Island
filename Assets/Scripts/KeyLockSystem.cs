@@ -11,16 +11,18 @@ public class KeyLockSystem : MonoBehaviour {
 
     [Header("UI")]
     [SerializeField]
-    Image RedKeyImage;
-    [SerializeField]
-    Image BlueKeyImage;
-    [SerializeField]
-    Image WhiteKeyImage;
+    Image[] allKeyImages;
+    //[SerializeField]
+    //Image RedKeyImage;
+    //[SerializeField]
+    //Image BlueKeyImage;
+    //[SerializeField]
+    //Image WhiteKeyImage;
 
     float keyObjectMoveAnimationTime = 1;
     float keyUIAnimationTime = 1;
 
-    List<Image> allKeyImages = new List<Image>();
+    //List<Image> allKeyImages = new List<Image>();
     HashSet<ColorKey> activatedKeys = new HashSet<ColorKey>();
     public HashSet<ColorKey> ActivatedKeys { get { return activatedKeys; } }
     HashSet<ColorKey> usedKeys = new HashSet<ColorKey>();
@@ -28,10 +30,10 @@ public class KeyLockSystem : MonoBehaviour {
 
     void Awake()
     {
-        allKeyImages.Add(RedKeyImage);
-        allKeyImages.Add(BlueKeyImage);
-        allKeyImages.Add(WhiteKeyImage);
-        Assert.IsTrue(allKeyImages.Count == (int)ColorKey.LastKey);
+        //allKeyImages.Add(RedKeyImage);
+        //allKeyImages.Add(BlueKeyImage);
+        //allKeyImages.Add(WhiteKeyImage);
+        Assert.IsTrue(allKeyImages.Length == (int)ColorKey.LastKey);
     }
 
     public void SetActivatedKey(ColorKey key)

@@ -16,6 +16,7 @@ TagManager:
   - Paper
   - Openable
   - ShadowPuzzle
+  - TunnelNavigation
   layers:
   - Default
   - TransparentFX
@@ -47,7 +48,7 @@ TagManager:
   - Basement
   - Tomb
   - Underground
-  - 
+  - Tunnel
   - 
   m_SortingLayers:
   - name: Default

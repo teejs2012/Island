@@ -22,6 +22,8 @@ public class GameController : MonoBehaviour {
     public Camera InteractableViewCamera;
     public Camera DigitLockViewCamera;
 
+    VRViewCameraController vrController;
+
     Camera currentCamera;
 
     [SerializeField]
@@ -51,6 +53,7 @@ public class GameController : MonoBehaviour {
 
     void Start()
     {
+        vrController = VRViewCamera.GetComponent<VRViewCameraController>();
         currentCamera = ARViewCamera;
         CurrentState = State.ARView;
     }
@@ -113,8 +116,24 @@ public class GameController : MonoBehaviour {
                     case Tags.Openable:
                         TryChangeStatus(hit.collider);
                         break;
+                    case Tags.TunnelNavigation:
+                        TryNavigateTunnel(hit.collider);
+                        break;
                 }
             }
+        }
+    }
+
+    void TryNavigateTunnel(Collider col)
+    {
+        var tunnelNavigation = col.GetComponent<TunnelNavigationData>();
+        if(tunnelNavigation != null)
+        {
+            var vrConroller = VRViewCamera.GetComponent<VRViewCameraController>();
+            if (vrConroller.IsDoingSwitch)
+                return;
+            vrConroller.MoveTrackedDollyPath(tunnelNavigation.PathValue);
+            tunnelNavigation.ChangeNavigationDirection();
         }
     }
 
@@ -164,12 +183,9 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    GameObject currentVRScene;
-
     void SwitchARVRView(Collider col)
     {
-        var vrConroller = VRViewCamera.GetComponent<VRViewCameraController>();
-        if (vrConroller.IsDoingSwitch)
+        if (vrController.IsDoingSwitch)
             return;
         if (CurrentState == State.ARView)
         {
@@ -178,20 +194,17 @@ public class GameController : MonoBehaviour {
             var data = col.GetComponent<ARVRSwitchData>();
             if (data != null)
             {
-                vrConroller.SwitchToVRView(ARViewCamera.transform, data.blendListCam);
+                vrController.SwitchToVRView(ARViewCamera.transform, data);
             }
         }
         else
-        {
-            UIManager.FadeScreenTransition(
+        {    
+            UIManager.FadeWhiteScreen(
                     () =>
                     {
                         CurrentState = State.ARView;
                         SwitchToCamera(ARViewCamera);
-                        if (currentVRScene != null)
-                        {
-                            currentVRScene.SetActive(false);
-                        }
+                        vrController.ExitVRView();
                     }
                 );
         }

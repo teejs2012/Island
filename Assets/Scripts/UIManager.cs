@@ -13,7 +13,9 @@ public class UIManager : MonoBehaviour {
     [SerializeField]
     GameObject digitLockUI;
     [SerializeField]
-    Image fadeOverlay;
+    Image fadeWhiteOverlay;
+    [SerializeField]
+    Image fadeBlackOverlay;
     Book book;
     [SerializeField]
     GameController gameController;
@@ -71,17 +73,22 @@ public class UIManager : MonoBehaviour {
         BackButton.gameObject.SetActive(false);
     }
 
-    public void FadeScreenTransition(Action action)
+    public void FadeWhiteScreen(Action action)
     {
-        LeanTween.alpha(fadeOverlay.rectTransform, 1, 0.5f).setOnComplete(
+        LeanTween.alpha(fadeWhiteOverlay.rectTransform, 1, 0.5f).setOnComplete(
             () => {
                 if (action != null)
                 {
                     action.Invoke();
                 }
-                LeanTween.alpha(fadeOverlay.rectTransform, 0, 0.5f);
+                LeanTween.alpha(fadeWhiteOverlay.rectTransform, 0, 0.5f);
             }
             );
+    }
+
+    public void FadeBlackScreen(float toValue, float time)
+    {
+        LeanTween.alpha(fadeBlackOverlay.rectTransform, toValue, time);
     }
 
     public void ClickBackButton()

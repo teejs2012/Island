@@ -5,5 +5,10 @@ using Cinemachine;
 
 public class ARVRSwitchData : MonoBehaviour {
     public GameObject TargetVRScene;
+    public List<GameObject> VRSceneObjectsToShow = new List<GameObject>();
     public CinemachineBlendListCamera blendListCam;
+    public float waitForTime;
+    public float fadeInBlackTime;
+    public float stayInBlackTime;
+    public float fadeOutBlackTime;
 }

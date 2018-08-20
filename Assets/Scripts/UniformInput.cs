@@ -6,6 +6,8 @@ public class UniformInput : MonoBehaviour {
 
     static UniformInput _instance;
     public static UniformInput Instance { get { return _instance; } }
+    [SerializeField]
+    VRViewCameraController vrController;
 
     private void Awake()
     {
@@ -99,18 +101,17 @@ public class UniformInput : MonoBehaviour {
 
     public bool GetPressDown()
     {
+        if (vrController.IsDoingSwitch) return false;
 #if UNITY_EDITOR
         return GetPressDownPC();
 #else
         return GetPressDownMobile();
 #endif
     }
-
     bool GetPressDownPC()
     {
         return Input.GetMouseButtonDown(0);
     }
-
     bool GetPressDownMobile()
     {
         return (Input.touchCount > 0 && (Input.touches[0].phase == TouchPhase.Began));
@@ -118,18 +119,17 @@ public class UniformInput : MonoBehaviour {
 
     public bool GetPressUp()
     {
+        if (vrController.IsDoingSwitch) return false;
 #if UNITY_EDITOR
         return GetPressUpPC();
 #else
         return GetPressUpMobile();
 #endif
     }
-
     bool GetPressUpPC()
     {
         return Input.GetMouseButtonUp(0);
     }
-
     bool GetPressUpMobile()
     {
         return (Input.touchCount > 0 && (Input.touches[0].phase == TouchPhase.Ended || Input.touches[0].phase == TouchPhase.Canceled));
@@ -137,18 +137,17 @@ public class UniformInput : MonoBehaviour {
 
     public bool GetPress()
     {
+        if (vrController.IsDoingSwitch) return false;
 #if UNITY_EDITOR
         return GetPressPC();
 #else
         return GetPressMobile();
 #endif
     }
-
     bool GetPressPC()
     {
         return Input.GetMouseButton(0);
     }
-
     bool GetPressMobile()
     {
         return Input.touchCount > 0;
@@ -167,7 +166,6 @@ public class UniformInput : MonoBehaviour {
         var position = Input.mousePosition;
         return new Vector2(position.x, position.y);
     }
-
     Vector2 GetPressPositionMobile()
     {
         return Input.touches[0].position;
