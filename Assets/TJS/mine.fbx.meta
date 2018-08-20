@@ -4,20 +4,20 @@ ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: Cube
-    100002: Mine
-    100004: //RootNode
+    100002: //RootNode
+    100004: Mine.003
     400000: Cube
-    400002: Mine
-    400004: //RootNode
+    400002: //RootNode
+    400004: Mine.003
     2100000: Wood
     2100002: Metal
     2100004: Earth
     2300000: Cube
-    2300002: Mine
+    2300002: Mine.003
     3300000: Cube
-    3300002: Mine
-    4300000: Cube
-    4300002: Mine
+    3300002: Mine.003
+    4300000: Mine.003
+    4300002: Cube
   externalObjects: {}
   materials:
     importMaterials: 1

@@ -10,7 +10,7 @@ public enum State
 
 public enum ColorKey
 {
-    RedKey, BlueKey, WhiteKey, OrangeKey, LastKey
+    RedKey, BlueKey, WhiteKey, OrangeKey, CyanKey, LastKey
 }
 
 public enum Axis

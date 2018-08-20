@@ -17,7 +17,10 @@ public class KeyLock : OneTimeTrigger {
 	
 	public void Unlock()
     {
-        data.TargetOpenable.Unlock();
+        foreach(var target in data.TargetOpenable)
+        {
+            target.Unlock();
+        }
         RegisterStatus();
 
         var dissolvable = GetComponent<Dissolvable>();

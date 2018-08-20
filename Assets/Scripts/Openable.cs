@@ -6,7 +6,6 @@ public abstract class Openable : OnOffStatusObject
 {
     LockableData lockableData;
     protected OpenableData openableData;
-    bool isShaking = false;
 
     public event System.Action CloseEvent = delegate { };
     public event System.Action OpenEvent = delegate { };
@@ -81,9 +80,9 @@ public abstract class Openable : OnOffStatusObject
 
     void ShakeTargetLock()
     {
-        if (isShaking || lockableData == null || lockableData.TargetLock == null) return;
-        isShaking = true;
-        LeanTween.rotateAround(lockableData.TargetLock, Vector3.up, 10, 0.5f).setEaseShake().setOnComplete(() => { isShaking = false; });
+        if (lockableData == null || lockableData.TargetLock == null) return;
+        if (LeanTween.isTweening(lockableData.TargetLock)) return;
+        LeanTween.rotateAround(lockableData.TargetLock, Vector3.up, 10, 0.5f).setEaseShake();
     }
 
 

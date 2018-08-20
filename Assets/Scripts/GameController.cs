@@ -119,8 +119,20 @@ public class GameController : MonoBehaviour {
                     case Tags.TunnelNavigation:
                         TryNavigateTunnel(hit.collider);
                         break;
+                    case Tags.UnderGroundSwitch:
+                        TrySwitchGround(hit.collider);
+                        break;
                 }
             }
+        }
+    }
+
+    void TrySwitchGround(Collider col)
+    {
+        var groundSwitch = col.GetComponent<UnderGroundSwitch>();
+        if(groundSwitch != null)
+        {
+            groundSwitch.Switch();
         }
     }
 

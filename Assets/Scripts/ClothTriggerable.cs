@@ -6,6 +6,8 @@ public class ClothTriggerable : MonoBehaviour {
     [SerializeField]
     Cloth cloth;
     [SerializeField]
+    Transform blocker;
+    [SerializeField]
     RotationOpenable openable;
     bool windEnabled = false;
     [SerializeField]
@@ -22,6 +24,7 @@ public class ClothTriggerable : MonoBehaviour {
         if (windEnabled) return;
         windEnabled = true;
         cloth.externalAcceleration += windVector;
+        blocker.localScale = blocker.localScale.SetY(blocker.localScale.y / 2);
     }
 
     void DisableWind()
@@ -29,5 +32,6 @@ public class ClothTriggerable : MonoBehaviour {
         if (!windEnabled) return;
         windEnabled = false;
         cloth.externalAcceleration -= windVector;
+        blocker.localScale = blocker.localScale.SetY(blocker.localScale.y * 2);
     }
 }

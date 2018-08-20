@@ -17,6 +17,7 @@ TagManager:
   - Openable
   - ShadowPuzzle
   - TunnelNavigation
+  - UnderGroundSwitch
   layers:
   - Default
   - TransparentFX
@@ -49,7 +50,7 @@ TagManager:
   - Tomb
   - Underground
   - Tunnel
-  - 
+  - Temple
   m_SortingLayers:
   - name: Default
     uniqueID: 0

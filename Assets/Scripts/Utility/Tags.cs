@@ -17,4 +17,5 @@ public class Tags {
     public const string Paper = "Paper";
     public const string Openable = "Openable";
     public const string TunnelNavigation = "TunnelNavigation";
+    public const string UnderGroundSwitch = "UnderGroundSwitch";
 }

@@ -15,6 +15,6 @@ public class KeyLockData : MonoBehaviour {
     public ColorKey KeyColor { get { return keyColor; } }
 
     [SerializeField]
-    Openable targetOpenable;
-    public Openable TargetOpenable { get { return targetOpenable; } }
+    Openable[] targetOpenable;
+    public Openable[] TargetOpenable { get { return targetOpenable; } }
 }
