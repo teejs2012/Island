@@ -40,7 +40,7 @@ public class VRViewCameraController : MonoBehaviour {
     {
         if (currentState == State.VRView && !IsDoingSwitch)
         {
-            MoveNormalViewCamera();
+            MoveVRViewCamera();
         }
     }
 
@@ -73,8 +73,19 @@ public class VRViewCameraController : MonoBehaviour {
         }
     }
 
+    Gyroscope gyro;
+
     void PrepareVRScene(GameObject vrScene, List<GameObject> objectsToShow)
     {
+
+#if !UNITY_EDITOR
+        if (SystemInfo.supportsGyroscope)
+        {
+            gyro = Input.gyro;
+            gyro.enabled = true;
+        }
+#endif
+
         vrScene.SetActive(true);
         foreach(Transform child in vrScene.transform)
         {
@@ -105,12 +116,9 @@ public class VRViewCameraController : MonoBehaviour {
         cinemachineBrain.enabled = true;
         var currentBlendlistCamGO = Instantiate(currentData.blendListCam.gameObject);
         currentBlendlistCam = currentBlendlistCamGO.GetComponent<CinemachineBlendListCamera>();
-        //currentBlendlistCam = currentData.blendListCam;
         SetTransform(currentARCamTransform, currentBlendlistCam.ChildCameras[0].transform);
         currentBlendlistCamGO.SetActive(true);
-        //currentBlendlistCam.enabled = true;
 
-        //currentData.blendListCam.enabled = true;
         foreach (CinemachineVirtualCamera child in currentBlendlistCam.ChildCameras)
         {
             var trackedDolly = child.GetCinemachineComponent<CinemachineTrackedDolly>();
@@ -172,15 +180,24 @@ public class VRViewCameraController : MonoBehaviour {
         to.eulerAngles = from.eulerAngles;
     }
 
-    void MoveNormalViewCamera()
+    void MoveVRViewCamera()
     {
         if (isDoingSwitch)
             return;
+
+
+
+#if UNITY_EDITOR
         if (Input.GetMouseButton(1))
         {
             cameraYaw += Input.GetAxis("Mouse X") * RotationSpeed;
             cameraPitch -= Input.GetAxis("Mouse Y") * RotationSpeed;
             currentCam.transform.eulerAngles = new Vector3(cameraPitch, cameraYaw, 0);
         }
+#else
+        if (gyro == null)
+            return;
+        currentCam.transform.Rotate(-gyro.rotationRateUnbiased.x, -gyro.rotationRateUnbiased.y, 0);
+#endif
     }
 }
