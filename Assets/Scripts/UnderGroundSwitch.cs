@@ -16,13 +16,19 @@ public class UnderGroundSwitch : MonoBehaviour {
         if (isGround)
         {
             Ground.SetActive(false);
-            //UnderGround.SetActive(true);
         }
         else
         {
             Ground.SetActive(true);
-            //UnderGround.SetActive(false);
         }
         isGround = !isGround;
+    }
+
+    void OnEnable()
+    {
+        if (!isGround)
+        {
+            Ground.SetActive(false);
+        }
     }
 }

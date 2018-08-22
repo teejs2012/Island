@@ -201,13 +201,13 @@ public class GameController : MonoBehaviour {
             return;
         if (CurrentState == State.ARView)
         {
-            CurrentState = State.VRView;
-            SwitchToCamera(VRViewCamera);
             var data = col.GetComponent<ARVRSwitchData>();
             if (data != null)
             {
                 vrController.SwitchToVRView(ARViewCamera.transform, data);
             }
+            CurrentState = State.VRView;
+            SwitchToCamera(VRViewCamera);
         }
         else
         {    

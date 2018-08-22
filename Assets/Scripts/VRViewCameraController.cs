@@ -97,6 +97,9 @@ public class VRViewCameraController : MonoBehaviour {
         }
     }
 
+    Transform currentARScene;
+    Transform currentARSceneParent;
+
     public void SwitchToVRView(Transform currentARCamTransform, ARVRSwitchData data)
     {
         if (isDoingSwitch)
@@ -112,6 +115,18 @@ public class VRViewCameraController : MonoBehaviour {
             PrepareVRScene(targetVRScene, data.VRSceneObjectsToShow);
         }
 
+        //temporarily freeze the ar scene for transition to vr view
+        currentARScene = currentData.CurrentARScene;
+        if(currentARScene != null)
+        {
+            currentARSceneParent = currentARScene.parent;
+            currentARScene.SetParent(null);
+            var depthMask = currentData.DepthMask;
+            if(depthMask != null)
+            {
+                depthMask.SetActive(false);
+            }
+        }
 
         cinemachineBrain.enabled = true;
         var currentBlendlistCamGO = Instantiate(currentData.blendListCam.gameObject);
@@ -153,7 +168,7 @@ public class VRViewCameraController : MonoBehaviour {
             if (blendListCam.IsLiveChild(camWithTrackedDolly[i]))
             {
                 var trackedDolly = camWithTrackedDolly[i].GetCinemachineComponent<CinemachineTrackedDolly>();
-                LeanTween.value(0, 1, 2).setOnUpdate((float x) => { trackedDolly.m_PathPosition = x; });
+                LeanTween.value(0, 1, 1).setOnUpdate((float x) => { trackedDolly.m_PathPosition = x; });
                 i++;
             }
             else
@@ -172,6 +187,14 @@ public class VRViewCameraController : MonoBehaviour {
         currentCam = blendListCam.ChildCameras[lastCamInd].transform;
         cameraPitch = currentCam.transform.eulerAngles.x;
         cameraYaw = currentCam.transform.eulerAngles.y;
+
+        //restore the AR scene
+        currentARScene.SetParent(currentARSceneParent);
+        var depthMask = currentData.DepthMask;
+        if (depthMask != null)
+        {
+            depthMask.SetActive(true);
+        }
     }
 
     void SetTransform(Transform from, Transform to)
