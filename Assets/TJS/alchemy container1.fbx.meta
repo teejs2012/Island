@@ -1,17 +1,15 @@
 fileFormatVersion: 2
-guid: 592136f8d1f80664abe43b13b11ad10b
+guid: e0ffc38e6e28d4649a091f4ab128adbe
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
     400000: //RootNode
-    2100000: metal
-    2100002: sklo
-    2100004: liquid_pink
-    2100006: svetlo001.001
+    2100000: wood
+    2100002: glass
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Cube.069
+    4300000: Cube.001
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -43,7 +41,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 50
     meshCompression: 0
     addColliders: 0
     importVisibility: 1

@@ -1,14 +1,16 @@
 fileFormatVersion: 2
-guid: db0eb0a466164964ea08b116ad8c612c
+guid: 63a75422e70b2d048b92f358437fffdf
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
     400000: //RootNode
-    2100000: sklo_zelene
+    2100000: iron
+    2100002: liquid
+    2100004: glass
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Circle.033
+    4300000: BezierCurve.002
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -40,7 +42,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 100
     meshCompression: 0
     addColliders: 0
     importVisibility: 1
