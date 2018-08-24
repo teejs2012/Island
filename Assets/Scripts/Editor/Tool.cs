@@ -17,7 +17,7 @@ public class InteractableWindow : EditorWindow {
     Quaternion originalGORotation;
     Vector3 originalGOScale;
     Transform originalParent;
-
+    bool isDoingCustomization = false;
     private void OnGUI()
     {
         if (GUILayout.Button("Customize"))
@@ -26,6 +26,8 @@ public class InteractableWindow : EditorWindow {
             {
                 return;
             }
+            if (isDoingCustomization)
+                return;
             currentGO = Selection.gameObjects[0];
             originalGOPosition = currentGO.transform.position;
             originalGORotation = currentGO.transform.rotation;
@@ -48,6 +50,7 @@ public class InteractableWindow : EditorWindow {
             Camera.main.transform.rotation = Quaternion.identity;
             Camera.main.transform.localScale = Vector3.one;
             SceneView.lastActiveSceneView.FrameSelected();
+            isDoingCustomization = true;
         }
 
         if(GUILayout.Button("Save"))
@@ -66,11 +69,14 @@ public class InteractableWindow : EditorWindow {
 
         if (GUILayout.Button("Back"))
         {
+            if (!isDoingCustomization)
+                return;
             currentGO.transform.SetParent(originalParent);
             currentGO.transform.position = originalGOPosition;
             currentGO.transform.rotation = originalGORotation;
             currentGO.transform.localScale = originalGOScale;
             SceneView.lastActiveSceneView.FrameSelected();
+            isDoingCustomization = false;
         }
     }
 }

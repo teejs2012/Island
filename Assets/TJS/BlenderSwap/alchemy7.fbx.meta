@@ -4,12 +4,23 @@ ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Camera
+    100004: Cube.056
+    100006: Lamp
     400000: //RootNode
+    400002: Camera
+    400004: Cube.056
+    400006: Lamp
+    2000000: Camera
     2100000: stranky
     2100002: kniha_2
     2300000: //RootNode
+    2300002: Cube.056
     3300000: //RootNode
+    3300002: Cube.056
     4300000: Cube.056
+    10800000: Lamp
+    2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
     importMaterials: 1

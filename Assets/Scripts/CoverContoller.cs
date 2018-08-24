@@ -24,6 +24,7 @@ public class CoverContoller : MonoBehaviour {
 
     void LoadScene()
     {
+        startButton.interactable = false;
         var loadOperation = SceneManager.LoadSceneAsync("Main");
         loadingBarParent.SetActive(true);
         StartCoroutine(UpdateLoadingBar(loadOperation));

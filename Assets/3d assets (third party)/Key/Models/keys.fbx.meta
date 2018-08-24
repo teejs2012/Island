@@ -1,31 +1,14 @@
 fileFormatVersion: 2
-guid: ce00bc6792bf6914895888f18cc43b2a
+guid: 981f4469ed126fe4ba3915f43748b37e
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
-    100002: trunk_xw00_xt00.001
-    100004: trunk_xw00_xt00.002
-    100006: trunk_xw00_xt00.003
-    100008: trunk_xw00_xt00.004
     400000: //RootNode
-    400002: trunk_xw00_xt00.001
-    400004: trunk_xw00_xt00.002
-    400006: trunk_xw00_xt00.003
-    400008: trunk_xw00_xt00.004
-    2100000: bark
-    2300000: trunk_xw00_xt00.001
-    2300002: trunk_xw00_xt00.002
-    2300004: trunk_xw00_xt00.003
-    2300006: trunk_xw00_xt00.004
-    3300000: trunk_xw00_xt00.001
-    3300002: trunk_xw00_xt00.002
-    3300004: trunk_xw00_xt00.003
-    3300006: trunk_xw00_xt00.004
-    4300000: trunk_xw00_xt00.004
-    4300002: trunk_xw00_xt00.003
-    4300004: trunk_xw00_xt00.002
-    4300006: trunk_xw00_xt00.001
+    2100000: initialShadingGroup
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: pPlane3
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -57,7 +40,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 100
     meshCompression: 0
     addColliders: 0
     importVisibility: 1
@@ -65,7 +48,7 @@ ModelImporter:
     importCameras: 1
     importLights: 1
     swapUVChannels: 0
-    generateSecondaryUV: 1
+    generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
