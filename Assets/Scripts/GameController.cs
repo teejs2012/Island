@@ -4,6 +4,7 @@ using UnityEngine;
 using DentedPixel;
 
 public class GameController : MonoBehaviour {
+
     State currentState;
     State CurrentState
     {
@@ -49,7 +50,6 @@ public class GameController : MonoBehaviour {
 
     public delegate void ReturnState(State state);
     public event ReturnState BroadcastState;
-
 
     void Start()
     {
@@ -195,30 +195,43 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    [HideInInspector]
+    public DefaultTrackableEventHandler targetHandler;
+    [HideInInspector]
+    public bool isLookingForSpecificMarker;
+
+    public void OnTargetHandlerFound()
+    {
+        isLookingForSpecificMarker = false;
+        targetHandler = null;
+        UIManager.HideCameraFrame();
+    }
+
     void SwitchARVRView(Collider col)
     {
         if (vrController.IsDoingSwitch)
             return;
+        var data = col.GetComponent<ARVRSwitchData>();
+        if (data == null) return;
+
         if (CurrentState == State.ARView)
         {
-            var data = col.GetComponent<ARVRSwitchData>();
-            if (data != null)
-            {
-                vrController.SwitchToVRView(ARViewCamera.transform, data);
-            }
+            vrController.SwitchToVRView(ARViewCamera.transform, data);
             CurrentState = State.VRView;
             SwitchToCamera(VRViewCamera);
         }
         else
-        {    
-            UIManager.FadeWhiteScreen(
-                    () =>
-                    {
-                        CurrentState = State.ARView;
-                        SwitchToCamera(ARViewCamera);
-                        vrController.ExitVRView();
-                    }
-                );
+        {
+            UIManager.FadeWhiteScreen(() =>
+                                        {
+                                            CurrentState = State.ARView;
+                                            SwitchToCamera(ARViewCamera);
+                                            vrController.ExitVRView(data);
+                                            UIManager.ShowCameraFrame(data.targetARSceneName);
+                                            targetHandler = data.targetARSceneHandler;
+                                            isLookingForSpecificMarker = true;
+                                        }
+                                    );
         }
     }
 

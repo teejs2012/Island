@@ -75,13 +75,29 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
     #endregion // PUBLIC_METHODS
 
     #region PROTECTED_METHODS
-
+    [SerializeField]
+    GameController gameController;
     protected virtual void OnTrackingFound()
     {
-        foreach (Transform child in this.transform)
+        if (gameController != null && gameController.isLookingForSpecificMarker)
         {
-            child.gameObject.SetActive(true);
+            if(gameController.targetHandler != null && gameController.targetHandler.Equals(this))
+            {
+                gameController.OnTargetHandlerFound();
+                foreach (Transform child in this.transform)
+                {
+                    child.gameObject.SetActive(true);
+                }
+            }
         }
+        else
+        {
+            foreach (Transform child in this.transform)
+            {
+                child.gameObject.SetActive(true);
+            }
+        }
+
         //var rendererComponents = GetComponentsInChildren<Renderer>(true);
         //var colliderComponents = GetComponentsInChildren<Collider>(true);
         //var canvasComponents = GetComponentsInChildren<Canvas>(true);

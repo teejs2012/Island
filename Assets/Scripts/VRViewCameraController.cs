@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.Assertions;
+using System;
 
 public class VRViewCameraController : MonoBehaviour {
 
@@ -12,6 +13,9 @@ public class VRViewCameraController : MonoBehaviour {
     GameController gameController;
     [SerializeField]
     UIManager uiManager;
+    public delegate void ARVRSwitchDataDelegate(ARVRSwitchData data);
+    public event ARVRSwitchDataDelegate OnSwitchToVRView;
+    public event ARVRSwitchDataDelegate OnExitVRView;
 
     State currentState;
 
@@ -52,11 +56,15 @@ public class VRViewCameraController : MonoBehaviour {
         LeanTween.value(trackedDolly.m_PathPosition, pos, 2).setOnUpdate((float x) => { trackedDolly.m_PathPosition = x; }).setOnComplete(()=> { isDoingSwitch = false; }) ;
     }
 
-    public void ExitVRView()
+    public void ExitVRView(ARVRSwitchData data)
     {
         if (currentData == null)
             return;
 
+        if (OnExitVRView != null)
+        {
+            OnExitVRView(data);
+        }
 
         camWithTrackedDolly.Clear();
         var targetVRScene = currentData.TargetVRScene;
@@ -145,6 +153,11 @@ public class VRViewCameraController : MonoBehaviour {
         }
         StartCoroutine(DoTrackedDolly(currentBlendlistCam));
         StartCoroutine(FadeScreen(currentData.waitForTime, currentData.fadeInBlackTime, currentData.stayInBlackTime, currentData.fadeOutBlackTime));
+
+        if (OnSwitchToVRView != null)
+        {
+            OnSwitchToVRView(currentData);
+        }
     }
 
     IEnumerator FadeScreen(float waitForTime, float fadeInDuration, float blackDuration, float fadeOutDuration)

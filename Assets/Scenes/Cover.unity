@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.788
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 0.788}
+  m_IndirectSpecularColor: {r: 0.07784499, g: 0.112992495, b: 0.16757429, a: 0.788}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -71,7 +71,7 @@ LightmapSettings:
     m_FinalGatherFiltering: 1
     m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
-    m_MixedBakeMode: 2
+    m_MixedBakeMode: 1
     m_BakeBackend: 1
     m_PVRSampling: 1
     m_PVRDirectSampleCount: 32
@@ -89,7 +89,8 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000002, guid: 75145286d8b55bc41bb1b1873cda76c2,
+    type: 2}
   m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
@@ -203,12 +204,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 896090959}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -530, y: -53.320007}
-  m_SizeDelta: {x: 273.9, y: 186.4}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 430, y: -53.320007}
+  m_SizeDelta: {x: 273.90002, y: -893.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &228434672
 MonoBehaviour:
@@ -321,7 +322,8 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: aac82d0173ce9ca44a549e9aa3082df1, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6461604, guid: 60116770606d26d4aa4ad5b1d47abb87, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: 60116770606d26d4aa4ad5b1d47abb87, type: 2}
   m_IsPrefabAsset: 0
 --- !u!4 &328349832 stripped
@@ -387,7 +389,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &557324914
 Transform:
@@ -432,12 +434,12 @@ Light:
   serializedVersion: 8
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 3.98
+  m_Intensity: 1.8
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -450,8 +452,8 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
-  m_Lightmapping: 4
+    m_Bits: 1
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -500,8 +502,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 1464069512}
   - {fileID: 228434671}
+  - {fileID: 1464069512}
   - {fileID: 1632854032}
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -605,7 +607,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000048637, y: -1.2}
+  m_AnchoredPosition: {x: -0.000061035156, y: -1.2000122}
   m_SizeDelta: {x: -0.000061035, y: -2.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1062225043
@@ -777,7 +779,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!193 &1138435223
 Tree:
@@ -918,7 +920,8 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: aac82d0173ce9ca44a549e9aa3082df1, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6461604, guid: 60116770606d26d4aa4ad5b1d47abb87, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: 60116770606d26d4aa4ad5b1d47abb87, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1 &1250313563
@@ -931,7 +934,6 @@ GameObject:
   - component: {fileID: 1250313567}
   - component: {fileID: 1250313566}
   - component: {fileID: 1250313565}
-  - component: {fileID: 1250313564}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -939,20 +941,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!64 &1250313564
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1250313563}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1250313565
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1113,12 +1101,12 @@ RectTransform:
   m_Children:
   - {fileID: 1078399063}
   m_Father: {fileID: 896090959}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -494, y: -222}
-  m_SizeDelta: {x: 345.8, y: 150.9}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 466, y: -222}
+  m_SizeDelta: {x: 345.8, y: -929.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1548133464
 GameObject:
@@ -1173,7 +1161,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1288,9 +1276,9 @@ RectTransform:
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 291, y: -222}
-  m_SizeDelta: {x: -902.1, y: -989.6}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 1251, y: -222}
+  m_SizeDelta: {x: 1017.9, y: -989.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1632854033
 MonoBehaviour:
@@ -1385,7 +1373,8 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: aac82d0173ce9ca44a549e9aa3082df1, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6441948, guid: c54b9fb125ceba84fb507430ced6b3c5, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: c54b9fb125ceba84fb507430ced6b3c5, type: 2}
   m_IsPrefabAsset: 0
 --- !u!4 &2121450894 stripped

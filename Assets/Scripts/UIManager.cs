@@ -19,13 +19,12 @@ public class UIManager : MonoBehaviour {
     Book book;
     [SerializeField]
     GameController gameController;
-    //void Awake()
-    //{
-    //    if(instance == null)
-    //    {
-    //        instance = this;
-    //    }
-    //}
+
+    [Header("Camera Frame")]
+    [SerializeField]
+    GameObject cameraFrame;
+    [SerializeField]
+    Text targetSceneText;
 
     void Start()
     {
@@ -33,6 +32,18 @@ public class UIManager : MonoBehaviour {
 
         book = bookVolume.GetComponentInChildren<Book>();
         bookVolume.SetActive(false);
+    }
+
+    public void HideCameraFrame()
+    {
+        cameraFrame.SetActive(false);
+        targetSceneText.text = string.Empty;
+    }
+
+    public void ShowCameraFrame(string targetSceneName)
+    {
+        cameraFrame.SetActive(true);
+        targetSceneText.text = targetSceneName;
     }
 
     public void ShowBookUI(Sprite[] pages) 
@@ -77,11 +88,11 @@ public class UIManager : MonoBehaviour {
     {
         LeanTween.alpha(fadeWhiteOverlay.rectTransform, 1, 0.5f).setOnComplete(
             () => {
+                LeanTween.alpha(fadeWhiteOverlay.rectTransform, 0, 0.5f);
                 if (action != null)
                 {
                     action.Invoke();
                 }
-                LeanTween.alpha(fadeWhiteOverlay.rectTransform, 0, 0.5f);
             }
             );
     }

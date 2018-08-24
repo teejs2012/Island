@@ -107,13 +107,24 @@ public class DevelopmentViewMode
         Dictionary<string, Transform> imageTargetTransforms = new Dictionary<string, Transform>(); 
         foreach (Transform child in imageTargetParent.transform)
         {
+            //Debug.Log(child.name);
             imageTargetTransforms.Add(child.name, child);
-            child.gameObject.SetActive(true);
-            child.SetParent(null);
         }
+
+        Dictionary<Transform, Transform> childParentTransformsPair = new Dictionary<Transform, Transform>();
         foreach(Transform child in editorViewParent.transform)
         {
-            child.SetParent(imageTargetTransforms[child.name]);
+            if (imageTargetTransforms.ContainsKey(child.name))
+            {
+                childParentTransformsPair.Add(child, imageTargetTransforms[child.name]);
+            } 
+        }
+
+        foreach(var pair in childParentTransformsPair)
+        {
+            pair.Key.SetParent(pair.Value);
+            pair.Value.SetParent(null);
+            pair.Value.gameObject.SetActive(true);
         }
     }
 
