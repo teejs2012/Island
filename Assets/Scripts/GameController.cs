@@ -366,6 +366,27 @@ public class GameController : MonoBehaviour {
     }
 
 
+    void OnApplicationPause(bool paused)
+    {
+        if (paused)
+        {
+            StatusManager.Instance.Save();
+            CurrentState = State.InteractableView;
+            SwitchToCamera(InteractableViewCamera);
+        }
+        else
+        {
+            CurrentState = State.ARView;
+            SwitchToCamera(ARViewCamera);
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        StatusManager.Instance.Save();
+    }
+
+
     #region helper functions
     void SaveGOTransform(Transform t)
     {

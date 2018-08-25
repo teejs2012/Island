@@ -42,7 +42,7 @@ public class UniformInput : MonoBehaviour {
             var previousPosition1 = currentPosition1 - Input.touches[1].deltaPosition;
             var currentDistance = Vector2.Distance(currentPosition0, currentPosition1);
             var previousDistance = Vector2.Distance(previousPosition0, previousPosition1);
-            return currentDistance / previousDistance;
+            return Mathf.Clamp(currentDistance / previousDistance - 1, -0.1f,0.1f);
         }
 
         return 0;

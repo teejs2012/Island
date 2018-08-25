@@ -51,6 +51,9 @@ public class InteractableViewController : MonoBehaviour {
         }
         if (UniformInput.Instance.GetPress())
         {
+#if !UNITY_EDITOR
+            moveSpeed = moveSpeed/2;
+#endif
             float xrot = UniformInput.Instance.GetMouseX() * moveSpeed * Time.deltaTime;
             float yrot = UniformInput.Instance.GetMouseY() * moveSpeed * Time.deltaTime;
             Vector3 objectDown = currentGOTransform.InverseTransformDirection(Vector3.down);
@@ -70,6 +73,7 @@ public class InteractableViewController : MonoBehaviour {
         }
 
         var zoomAmount = UniformInput.Instance.GetZoomAmount();
+        Debug.Log(zoomAmount);
         if (zoomAmount != 0 && !limitZoom)
         {
             currentGOTransform.transform.localScale = currentGOTransform.localScale * (1 + zoomAmount) * zoomSpeed;

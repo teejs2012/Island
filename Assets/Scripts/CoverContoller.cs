@@ -34,7 +34,8 @@ public class CoverContoller : MonoBehaviour {
     {
         while (!operation.isDone)
         {
-            loadingBar.fillAmount = operation.progress;
+            float progress = Mathf.Clamp01(operation.progress / 0.9f);
+            loadingBar.fillAmount = progress;
             yield return null;
         }
     }
