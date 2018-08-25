@@ -29,4 +29,11 @@ public class OpenableData : MonoBehaviour {
     public Axis DragAxis { get { return dragAxis; } }
     public bool InvertDragEffect { get { return invertDragEffect; } }
     public float DragEffectSpeed { get { return dragEffectSpeed; } }
+
+    void Start()
+    {
+#if !UNITY_EDITOR
+           dragEffectSpeed *= 2;
+#endif
+    }
 }

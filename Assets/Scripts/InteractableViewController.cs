@@ -20,6 +20,9 @@ public class InteractableViewController : MonoBehaviour {
        
     void Start () {
         gameController.BroadcastState += UpdateCurrentState;
+#if !UNITY_EDITOR
+            moveSpeed = moveSpeed/2;
+#endif
     }
 
     void UpdateCurrentState(State state)
@@ -51,9 +54,7 @@ public class InteractableViewController : MonoBehaviour {
         }
         if (UniformInput.Instance.GetPress())
         {
-#if !UNITY_EDITOR
-            moveSpeed = moveSpeed/2;
-#endif
+
             float xrot = UniformInput.Instance.GetMouseX() * moveSpeed * Time.deltaTime;
             float yrot = UniformInput.Instance.GetMouseY() * moveSpeed * Time.deltaTime;
             Vector3 objectDown = currentGOTransform.InverseTransformDirection(Vector3.down);

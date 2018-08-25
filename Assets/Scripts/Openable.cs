@@ -128,6 +128,7 @@ public abstract class Openable : OnOffStatusObject
 
             float deltaX = UniformInput.Instance.GetPressPosition().x - currentMouseX;
             float deltaY = UniformInput.Instance.GetPressPosition().y - currentMouseY;
+
             currentMouseX = UniformInput.Instance.GetPressPosition().x;
             currentMouseY = UniformInput.Instance.GetPressPosition().y;
 
@@ -163,9 +164,9 @@ public abstract class Openable : OnOffStatusObject
         result *= (openableData.InvertDragEffect ? -1 : 1) * openableData.DragEffectSpeed;
         return result;
     }
-    #endregion
+#endregion
 
-    #region Animation Code
+#region Animation Code
     bool isChangingStatus = false;
     void ChangeStatus()
     {
@@ -205,5 +206,5 @@ public abstract class Openable : OnOffStatusObject
     protected abstract void DoCloseAnimation(System.Action callback);
     protected abstract void DoOpenAnimation(System.Action callback);
 
-    #endregion
+#endregion
 }
