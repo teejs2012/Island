@@ -264,21 +264,16 @@ public class GameController : MonoBehaviour {
     {
         PrepareGOForInteractableView(col.gameObject);
 
-        PaperData paperData = col.gameObject.GetComponent<PaperData>();
-        if(paperData != null)
+        PapersController paperController = col.gameObject.GetComponent<PapersController>();
+        if(paperController != null)
         {
-            int contentCount = paperData.texts.Count;
-            for(int i = 0; i< contentCount; i++)
-            {
-                paperData.texts[i].text = TextHandler.GetText(paperData.keyWords[i]);
-            }
-            paperData.content.gameObject.SetActive(true);
+            paperController.Init(TextHandler);
+
+            UIManager.ShowBackButton(RestoreGOFromInteractableView, GetSwitchBackFunction(), paperController.ExitPaperView);
+
+            CurrentState = State.PaperView;
+            SwitchToCamera(InteractableViewCamera);
         }
-
-        UIManager.ShowBackButton(RestoreGOFromInteractableView, GetSwitchBackFunction(), () => { paperData.content.gameObject.SetActive(false); });
-
-        CurrentState = State.PaperView;
-        SwitchToCamera(InteractableViewCamera);
     }
 
     void SwitchToInteractableView(Collider col)
