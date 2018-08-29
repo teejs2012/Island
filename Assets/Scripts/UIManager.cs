@@ -46,9 +46,9 @@ public class UIManager : MonoBehaviour {
         targetSceneText.text = targetSceneName;
     }
 
-    public void ShowBookUI(Sprite[] pages) 
+    public void ShowBookUI(Sprite[] pages, Sprite bookBack) 
     {
-        book.Initialize(pages);
+        book.Initialize(pages, bookBack);
         bookVolume.SetActive(true);
     }
 

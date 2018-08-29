@@ -253,7 +253,7 @@ public class GameController : MonoBehaviour {
         var data = col.gameObject.GetComponent<BookData>();
         if (data != null)
         {
-            UIManager.ShowBookUI(data.Pages);
+            UIManager.ShowBookUI(data.Pages, data.bookBack);
             UIManager.ShowBackButton(GetSwitchBackFunction(), UIManager.HideBookUI);
             CurrentState = State.BookView;
             SwitchToCamera(InteractableViewCamera);

@@ -5,4 +5,5 @@ using UnityEngine;
 public class BookData : MonoBehaviour {
 
     public Sprite[] Pages;
+    public Sprite bookBack;
 }

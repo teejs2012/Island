@@ -74,7 +74,7 @@ public class InteractableViewController : MonoBehaviour {
         }
 
         var zoomAmount = UniformInput.Instance.GetZoomAmount();
-        Debug.Log(zoomAmount);
+        //Debug.Log(zoomAmount);
         if (zoomAmount != 0 && !limitZoom)
         {
             currentGOTransform.transform.localScale = currentGOTransform.localScale * (1 + zoomAmount) * zoomSpeed;

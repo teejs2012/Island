@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UniformInput : MonoBehaviour {
 
@@ -98,6 +99,29 @@ public class UniformInput : MonoBehaviour {
         return 0;
     }
     #endregion
+
+    public bool IsOverUIElement()
+    {
+#if UNITY_EDITOR
+        return IsOverUIElementPC();
+#else
+        return IsOverUIElementMobile();
+#endif
+    }
+    
+    bool IsOverUIElementPC()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
+    }
+
+    bool IsOverUIElementMobile()
+    {
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
+            return EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+        }
+        return false;
+    }
 
     public bool GetPressDown()
     {

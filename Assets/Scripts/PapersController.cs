@@ -14,7 +14,8 @@ public class PapersController : MonoBehaviour {
     TextHandler handler;
     PaperData currentData;
     int currentPaperInd;
-    bool beingViewed = false;
+    //bool beingViewed = false;
+    int clickCount = 0;
 
     void Start()
     {
@@ -27,22 +28,29 @@ public class PapersController : MonoBehaviour {
     public void Init(TextHandler textHandler)
     {
         //this.gameObject.SetActive(true);
+        clickCount = 0;
         if (isInvisible)
         {
             meshRenderer.enabled = true;
         }
-        beingViewed = true;
+        //beingViewed = true;
         handler = textHandler;
         if (paperDataList.Length > 0)
         {
             currentData = paperDataList[0];
             currentPaperInd = 0;
             ShowPaper();
+            StartCoroutine(ListenToPress());
         }
     }
 
     public void NextPaper()
     {
+        if (paperDataList.Length < 1)
+        {
+            return;
+        }
+        clickCount++;
         currentPaperInd++;
         if(currentPaperInd >= paperDataList.Length)
         {
@@ -68,7 +76,8 @@ public class PapersController : MonoBehaviour {
             meshRenderer.enabled = false;
         }
         HidePaper();
-        beingViewed = false;
+        //beingViewed = false;
+        StopAllCoroutines();
     }
 
     void ShowPaper()
@@ -104,12 +113,31 @@ public class PapersController : MonoBehaviour {
         ShowPaper();
     }
 
-    void Update()
+    IEnumerator ListenToPress()
     {
-        if (!beingViewed) return;
-        if (UniformInput.Instance.GetPressDown())
+        while (true)
         {
-            NextPaper();
+            //ignore the first click 
+            if (UniformInput.Instance.GetPressDown() && !UniformInput.Instance.IsOverUIElement())
+            {
+                //Debug.Log("next paper");
+                if(clickCount != 0)
+                {
+                    NextPaper();
+                }
+                clickCount++;
+            }
+            yield return null;
         }
     }
+
+    //void Update()
+    //{
+    //    if (!beingViewed) return;
+    //    if (UniformInput.Instance.GetPressDown())
+    //    {
+    //        //Debug.Log("next paper");
+    //        NextPaper();
+    //    }
+    //}
 }
