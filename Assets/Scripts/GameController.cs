@@ -61,7 +61,7 @@ public class GameController : MonoBehaviour {
     }
 
     void Update () {
-        if (UniformInput.Instance.GetPressDown())
+        if (UniformInput.Instance.GetPressDown() && !UniformInput.Instance.IsOverUIElement())
         {
             if(CurrentState == State.ARView)
             {
@@ -225,6 +225,7 @@ public class GameController : MonoBehaviour {
             vrController.SwitchToVRView(ARViewCamera.transform, data);
             CurrentState = State.VRView;
             SwitchToCamera(VRViewCamera);
+            UIManager.ShowCurrentSceneName("");
         }
         else
         {

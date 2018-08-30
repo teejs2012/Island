@@ -203,6 +203,7 @@ public class VRViewCameraController : MonoBehaviour {
 
         //restore the AR scene
         currentARScene.SetParent(currentARSceneParent);
+        currentARScene.gameObject.SetActive(false);
         var depthMask = currentData.DepthMask;
         if (depthMask != null)
         {
@@ -233,7 +234,7 @@ public class VRViewCameraController : MonoBehaviour {
 #else
         if (gyro == null)
             return;
-        currentCam.transform.Rotate(-gyro.rotationRateUnbiased.x, -gyro.rotationRateUnbiased.y, 0);
+        currentCam.transform.Rotate(-gyro.rotationRateUnbiased.x*2, -gyro.rotationRateUnbiased.y*2, 0);
 #endif
     }
 }

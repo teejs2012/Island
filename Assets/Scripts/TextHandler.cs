@@ -24,7 +24,11 @@ public class TextHandler : MonoBehaviour {
 
 	IEnumerator ParseCSV()
     {
+#if UNITY_IOS
+        WWW www = new WWW("file://"+path);
+#else
         WWW www = new WWW(path);
+#endif
         yield return www;
         string content = www.text;
         foreach (var line in content.Split('\n'))
