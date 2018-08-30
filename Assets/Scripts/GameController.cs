@@ -24,6 +24,7 @@ public class GameController : MonoBehaviour {
     public Camera DigitLockViewCamera;
 
     VRViewCameraController vrController;
+    InteractableViewController interController;
 
     Camera currentCamera;
 
@@ -54,6 +55,7 @@ public class GameController : MonoBehaviour {
     void Start()
     {
         vrController = VRViewCamera.GetComponent<VRViewCameraController>();
+        interController = InteractableViewCamera.GetComponent<InteractableViewController>();
         currentCamera = ARViewCamera;
         CurrentState = State.ARView;
     }
@@ -183,6 +185,10 @@ public class GameController : MonoBehaviour {
         {
             //data.ChangeStatus();
             data.StartDrag(currentCamera);
+            if(CurrentState == State.InteractableView)
+            {
+                interController.SetOpenable(data);
+            }
         }
     }
 
@@ -280,7 +286,7 @@ public class GameController : MonoBehaviour {
     {
         PrepareGOForInteractableView(col.gameObject);
 
-        UIManager.ShowBackButton(RestoreGOFromInteractableView, GetSwitchBackFunction());
+        UIManager.ShowBackButton(RestoreGOFromInteractableView, GetSwitchBackFunction(), ()=> { interController.SetOpenable(null); });
 
         CurrentState = State.InteractableView;
         SwitchToCamera(InteractableViewCamera);

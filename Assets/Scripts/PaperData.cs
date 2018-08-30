@@ -8,6 +8,6 @@ public class PaperData : MonoBehaviour {
 
     public Canvas content;
     public List<string> keyWords = new List<string>();
-    public List<TextMeshPro> texts = new List<TextMeshPro>();
+    public List<TextMeshProUGUI> texts = new List<TextMeshProUGUI>();
     public Material paperMaterial;
 }

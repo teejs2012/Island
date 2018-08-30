@@ -87,6 +87,7 @@ public abstract class Openable : OnOffStatusObject
 
 
     #region Dragging Code
+    public bool IsDragging { get { return isDragging; } }
     protected bool isDragging = false;
     Camera currentCam;
     public void StartDrag(Camera cam)

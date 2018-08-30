@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using DentedPixel;
+using TMPro;
 
 public class UIManager : MonoBehaviour {
 
@@ -25,6 +25,8 @@ public class UIManager : MonoBehaviour {
     GameObject cameraFrame;
     [SerializeField]
     Text targetSceneText;
+    [SerializeField]
+    TextMeshProUGUI tmp;
 
     void Start()
     {
@@ -32,6 +34,11 @@ public class UIManager : MonoBehaviour {
 
         book = bookVolume.GetComponentInChildren<Book>();
         bookVolume.SetActive(false);
+    }
+
+    public void ShowCurrentSceneName(string n)
+    {
+        tmp.text = n;
     }
 
     public void HideCameraFrame()
@@ -88,7 +95,9 @@ public class UIManager : MonoBehaviour {
     {
         LeanTween.alpha(fadeWhiteOverlay.rectTransform, 1, 0.5f).setOnComplete(
             () => {
-                LeanTween.alpha(fadeWhiteOverlay.rectTransform, 0, 0.5f);
+                var targetColor = fadeWhiteOverlay.color;
+                targetColor.a = 0;
+                fadeWhiteOverlay.color = targetColor;
                 if (action != null)
                 {
                     action.Invoke();

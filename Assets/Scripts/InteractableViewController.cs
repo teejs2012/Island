@@ -52,6 +52,20 @@ public class InteractableViewController : MonoBehaviour {
         {
             return;
         }
+
+        if(currentOpenable != null && currentOpenable.IsDragging)
+        {
+            return;
+        }
+
+        var zoomAmount = UniformInput.Instance.GetZoomAmount();
+        //Debug.Log(zoomAmount);
+        if (zoomAmount != 0 && !limitZoom)
+        {
+            currentGOTransform.transform.localScale = currentGOTransform.localScale * (1 + zoomAmount) * zoomSpeed;
+            return;
+        }
+
         if (UniformInput.Instance.GetPress())
         {
 
@@ -72,12 +86,12 @@ public class InteractableViewController : MonoBehaviour {
                 currentGOTransform.RotateAround(center, currentGOTransform.up, objectLeft.y * yrot);
             }
         }
+    }
 
-        var zoomAmount = UniformInput.Instance.GetZoomAmount();
-        //Debug.Log(zoomAmount);
-        if (zoomAmount != 0 && !limitZoom)
-        {
-            currentGOTransform.transform.localScale = currentGOTransform.localScale * (1 + zoomAmount) * zoomSpeed;
-        }
+    Openable currentOpenable;
+
+    public void SetOpenable(Openable data)
+    {
+        currentOpenable = data;
     }
 }

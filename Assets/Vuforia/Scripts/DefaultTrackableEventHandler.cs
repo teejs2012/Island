@@ -8,6 +8,7 @@ Confidential and Proprietary - Protected under copyright and other laws.
 
 using UnityEngine;
 using Vuforia;
+using TMPro;
 
 /// <summary>
 /// A custom handler that implements the ITrackableEventHandler interface.
@@ -77,6 +78,23 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
     #region PROTECTED_METHODS
     [SerializeField]
     GameController gameController;
+    [SerializeField]
+    string sceneName;
+    [SerializeField]
+    UIManager uiManager;
+
+    void ActivateScene()
+    {
+        foreach (Transform child in this.transform)
+        {
+            child.gameObject.SetActive(true);
+        }
+        if (uiManager != null)
+        {
+            uiManager.ShowCurrentSceneName(sceneName);
+        }
+    }
+
     protected virtual void OnTrackingFound()
     {
         if (gameController != null && gameController.isLookingForSpecificMarker)
@@ -84,18 +102,12 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
             if(gameController.targetHandler != null && gameController.targetHandler.Equals(this))
             {
                 gameController.OnTargetHandlerFound();
-                foreach (Transform child in this.transform)
-                {
-                    child.gameObject.SetActive(true);
-                }
+                ActivateScene();
             }
         }
         else
         {
-            foreach (Transform child in this.transform)
-            {
-                child.gameObject.SetActive(true);
-            }
+            ActivateScene();
         }
 
         //var rendererComponents = GetComponentsInChildren<Renderer>(true);
