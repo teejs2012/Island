@@ -52,7 +52,7 @@ public class GameController : MonoBehaviour {
     public delegate void ReturnState(State state);
     public event ReturnState BroadcastState;
 
-    void Start()
+    void Awake()
     {
         vrController = VRViewCamera.GetComponent<VRViewCameraController>();
         interController = InteractableViewCamera.GetComponent<InteractableViewController>();
@@ -319,17 +319,33 @@ public class GameController : MonoBehaviour {
 
 
     #region Camera
-    void DisableAllCameras()
-    {
-        ARViewCamera.gameObject.SetActive(false);
-        VRViewCamera.enabled = false;
-        InteractableViewCamera.enabled = false;
-        DigitLockViewCamera.enabled = false;
-    }
+    //void DisableAllCameras()
+    //{
+    //    if (ARViewCamera.gameObject.activeSelf)
+    //    {
+    //        ARViewCamera.gameObject.SetActive(false);
+    //    }
+    //    if (VRViewCamera.enabled)
+    //    {
+    //        VRViewCamera.enabled = false;
+    //    }
+    //    if (InteractableViewCamera.enabled)
+    //    {
+    //        InteractableViewCamera.enabled = false;
+    //    }
+    //    if (DigitLockViewCamera.enabled)
+    //    {
+    //        DigitLockViewCamera.enabled = false;
+    //    }
+    //}
 
     void SwitchToCamera(Camera cam)
     {
-        DisableAllCameras();
+        //DisableAllCameras();
+        if(cam == currentCamera)
+        {
+            return;
+        }
         if(cam == ARViewCamera)
         {
             cam.gameObject.SetActive(true);
@@ -338,6 +354,17 @@ public class GameController : MonoBehaviour {
         {
             cam.enabled = true;
         }
+
+
+        if(currentCamera == ARViewCamera)
+        {
+            currentCamera.gameObject.SetActive(false);
+        }
+        else
+        {
+            currentCamera.enabled = false;
+        }
+
         currentCamera = cam;
     }
     #endregion

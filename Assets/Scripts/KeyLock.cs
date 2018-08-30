@@ -44,6 +44,13 @@ public class KeyLock : OneTimeTrigger {
 
     public override void Trigger()
     {
-        Unlock();
+        Debug.Log(name + "is doing trigger");
+        foreach (var target in data.TargetOpenable)
+        {
+            target.Unlock();
+        }
+        RegisterStatus();
+
+        Destroy(gameObject);
     }
 }

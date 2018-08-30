@@ -166,6 +166,15 @@ public class VRViewCameraController : MonoBehaviour {
         uiManager.FadeBlackScreen(1, fadeInDuration);
         yield return new WaitForSeconds(fadeInDuration + blackDuration);
         uiManager.FadeBlackScreen(0, fadeOutDuration);
+
+        //restore the AR scene
+        currentARScene.SetParent(currentARSceneParent);
+        currentARScene.gameObject.SetActive(false);
+        var depthMask = currentData.DepthMask;
+        if (depthMask != null)
+        {
+            depthMask.SetActive(true);
+        }
     }
 
     bool isDoingSwitch = false;
@@ -200,15 +209,6 @@ public class VRViewCameraController : MonoBehaviour {
         currentCam = blendListCam.ChildCameras[lastCamInd].transform;
         cameraPitch = currentCam.transform.eulerAngles.x;
         cameraYaw = currentCam.transform.eulerAngles.y;
-
-        //restore the AR scene
-        currentARScene.SetParent(currentARSceneParent);
-        currentARScene.gameObject.SetActive(false);
-        var depthMask = currentData.DepthMask;
-        if (depthMask != null)
-        {
-            depthMask.SetActive(true);
-        }
     }
 
     void SetTransform(Transform from, Transform to)

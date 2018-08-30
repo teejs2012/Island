@@ -44,6 +44,7 @@ public class KeyLockSystem : MonoBehaviour {
         }
 
         activatedKeys.Add(key);
+        StatusManager.Instance.RegisterAsActiveKeys((int)key);
 
         Image keyImage = allKeyImages[(int)key];
         keyImage.rectTransform.SetAsFirstSibling();
@@ -58,7 +59,13 @@ public class KeyLockSystem : MonoBehaviour {
             return;
         }
 
+        if (activatedKeys.Contains(key))
+        {
+            activatedKeys.Remove(key);
+        }
         usedKeys.Add(key);
+        StatusManager.Instance.RegisterAsUsedKeys((int)key);
+        allKeyImages[(int)key].gameObject.SetActive(false);
     }
 
     public void ActivateKey(ColorKey key, GameObject keyGO, Camera cam)
@@ -88,6 +95,7 @@ public class KeyLockSystem : MonoBehaviour {
 
         //Debug.Log("anchored : "+ allKeyImages[(int)key].rectTransform.anchoredPosition +" position: " + allKeyImages[(int)key].rectTransform.position);
         activatedKeys.Add(key);
+        StatusManager.Instance.RegisterAsActiveKeys((int)key);
     }
 
     public void TryUnlock(KeyLock keyLock)
@@ -98,6 +106,7 @@ public class KeyLockSystem : MonoBehaviour {
             int keyInd = (int)keyLock.KeyColor;
             activatedKeys.Remove(keyLock.KeyColor);
             usedKeys.Add(keyLock.KeyColor);
+            StatusManager.Instance.RegisterAsUsedKeys((int)keyLock.KeyColor);
             LeanTween.value(1, 0, keyUIAnimationTime).setOnUpdate((float x) => { allKeyImages[keyInd].fillAmount = x; }).setEaseOutCubic().setOnComplete(
                 () => { allKeyImages[keyInd].gameObject.SetActive(false); }
                 );

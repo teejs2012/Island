@@ -53,6 +53,11 @@ public class InteractableViewController : MonoBehaviour {
             return;
         }
 
+        if (UniformInput.Instance.IsOverUIElement())
+        {
+            return;
+        }
+
         if(currentOpenable != null && currentOpenable.IsDragging)
         {
             return;
