@@ -30,10 +30,17 @@ public class KeyLockSystem : MonoBehaviour {
 
     void Awake()
     {
-        //allKeyImages.Add(RedKeyImage);
-        //allKeyImages.Add(BlueKeyImage);
-        //allKeyImages.Add(WhiteKeyImage);
         Assert.IsTrue(allKeyImages.Length == (int)ColorKey.LastKey);
+        
+        foreach (int keyColor in StatusManager.Instance.GetActiveKeys())
+        {
+            SetActivatedKey((ColorKey)keyColor);
+        }
+
+        foreach (int keyColor in StatusManager.Instance.GetUsedKeys())
+        {
+            SetUsedKey((ColorKey)keyColor);
+        }
     }
 
     public void SetActivatedKey(ColorKey key)
@@ -44,7 +51,6 @@ public class KeyLockSystem : MonoBehaviour {
         }
 
         activatedKeys.Add(key);
-        StatusManager.Instance.RegisterAsActiveKeys((int)key);
 
         Image keyImage = allKeyImages[(int)key];
         keyImage.rectTransform.SetAsFirstSibling();
@@ -64,16 +70,19 @@ public class KeyLockSystem : MonoBehaviour {
             activatedKeys.Remove(key);
         }
         usedKeys.Add(key);
-        StatusManager.Instance.RegisterAsUsedKeys((int)key);
         allKeyImages[(int)key].gameObject.SetActive(false);
     }
 
-    public void ActivateKey(ColorKey key, GameObject keyGO, Camera cam)
+    public void ActivateKey(KeyData data, GameObject keyGO, Camera cam)
     {
+
+        ColorKey key = data.KeyColor;
         if (activatedKeys.Contains(key))
         {
             return;
         }
+
+        data.Register();
 
         var col = keyGO.GetComponent<Collider>();
         if (col != null) col.enabled = false;

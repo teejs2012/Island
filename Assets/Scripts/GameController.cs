@@ -165,7 +165,7 @@ public class GameController : MonoBehaviour {
         var data = col.GetComponent<KeyData>();
         if(data != null)
         {
-            KeyLockSystem.ActivateKey(data.KeyColor,col.gameObject, currentCamera);
+            KeyLockSystem.ActivateKey(data,col.gameObject, currentCamera);
         }
     }
 
@@ -399,7 +399,7 @@ public class GameController : MonoBehaviour {
     {
         if (paused)
         {
-            StatusManager.Instance.Save();
+            //StatusManager.Instance.Save();
             CurrentState = State.InteractableView;
             SwitchToCamera(InteractableViewCamera);
         }
@@ -412,7 +412,7 @@ public class GameController : MonoBehaviour {
 
     void OnApplicationQuit()
     {
-        StatusManager.Instance.Save();
+        //StatusManager.Instance.Save();
     }
 
 

@@ -28,9 +28,9 @@ public class LanternTriggerable : OneTimeTrigger
         breakable.DoBreak += StartAnimation;
     }
 
-    public override void Trigger()
+    protected override void Trigger()
     {
-        RegisterStatus();
+        base.Trigger();
         lantern.SetActive(false);
         strawBed.gameObject.SetActive(false);
         tunnel.SetActive(true);

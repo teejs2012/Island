@@ -17,18 +17,18 @@ public abstract class Openable : OnOffStatusObject
         lockableData = GetComponent<LockableData>();
     }
 
-    public override void SetOpenableDataStatus(bool isOpen)
-    {
-        base.SetOpenableDataStatus(isOpen);
-        openableData.IsOpen = isOpen;
-    }
+    //public override void SetOpenableDataStatus(bool isOpen)
+    //{
+    //    base.SetOpenableDataStatus(isOpen);
+    //    openableData.IsOpen = isOpen;
+    //}
 
     protected virtual void OnEnable()
     {
-        if(lockableData != null && !lockableData.IsLocked)
-        {
-            RevealContent();
-        }
+        //if(lockableData != null && !lockableData.IsLocked)
+        //{
+        //    RevealContent();
+        //}
         if (openableData.IsOpen)
         {
             SetOpen();
@@ -180,7 +180,7 @@ public abstract class Openable : OnOffStatusObject
         {
             Close();
         }
-        RegisterStatus(openableData.IsOpen);
+        //RegisterStatus(openableData.IsOpen);
     }
 
     protected abstract bool TendingToOpen();

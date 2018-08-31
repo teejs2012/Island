@@ -92,6 +92,15 @@ public class OverLimitPositionOpenable : PositionOpenable {
     [SerializeField]
     Vector3 pulledOffPosition;
 
+    void OnDisable()
+    {
+        if(!pulledOff && StatusManager.Instance.CheckTrigger(name))
+        {
+            pulledOff = true;
+            Destroy(this.gameObject);
+        }
+    }
+
     void DoPullOff(Vector3 pullDir)
     {
         StatusManager.Instance.RegisterAsTriggeredObject(name);
@@ -101,17 +110,6 @@ public class OverLimitPositionOpenable : PositionOpenable {
         var rbody = gameObject.AddComponent<Rigidbody>();
         rbody.AddForce(transform.TransformVector(pullDir.normalized) * forceAmount);
         tag = Tags.Untagged;
-        //var dissolveComponent = GetComponent<Dissolvable>();
         Destroy(this);
-        //if (dissolveComponent != null)
-        //{
-        //    dissolveComponent.Dissolve(1, ()=> { Destroy(this.gameObject); });
-        //}
-    }
-
-    public void Trigger()
-    {
-        StatusManager.Instance.RegisterAsTriggeredObject(name);
-        Destroy(this.gameObject);
     }
 }

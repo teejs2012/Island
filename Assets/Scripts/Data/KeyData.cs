@@ -2,11 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KeyData : MonoBehaviour {
+public class KeyData : OneTimeTrigger {
 
     void Start()
     {
         tag = Tags.Key;
+    }
+
+    protected override void Trigger()
+    {
+        base.Trigger();
+        Destroy(this.gameObject);
+    }
+
+    public void Register()
+    {
+        RegisterStatus();
     }
 
     [SerializeField]

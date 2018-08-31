@@ -1,7 +1,20 @@
 ﻿using UnityEngine;
 
 public abstract class OneTimeTrigger : MonoBehaviour {
-    public abstract void Trigger();
+    protected virtual void Trigger()
+    {
+        isTriggered = true;
+    }
+
+    protected void OnDisable()
+    {
+        if(!isTriggered && StatusManager.Instance.CheckTrigger(name))
+        {
+            Trigger();
+        }
+    }
+
+    protected bool isTriggered = false;
 
     protected virtual void Awake()
     {
@@ -15,6 +28,7 @@ public abstract class OneTimeTrigger : MonoBehaviour {
 
     protected void RegisterStatus()
     {
+        isTriggered = true;
         StatusManager.Instance.RegisterAsTriggeredObject(name);
     }
 }

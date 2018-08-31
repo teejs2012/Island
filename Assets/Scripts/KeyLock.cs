@@ -42,14 +42,15 @@ public class KeyLock : OneTimeTrigger {
         LeanTween.rotateAround(gameObject, Vector3.up, 10, 0.5f).setEaseShake().setOnComplete(() => { isShaking = false; });
     }
 
-    public override void Trigger()
+    protected override void Trigger()
     {
-        Debug.Log(name + "is doing trigger");
+        base.Trigger();
+        //Debug.Log(name + "is doing trigger");
         foreach (var target in data.TargetOpenable)
         {
             target.Unlock();
         }
-        RegisterStatus();
+        //RegisterStatus();
 
         Destroy(gameObject);
     }

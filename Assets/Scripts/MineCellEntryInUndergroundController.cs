@@ -12,18 +12,17 @@ public class MineCellEntryInUndergroundController : OneTimeTrigger {
     [SerializeField]
     VRViewCameraController vrController;
 
-    bool isTriggered = false;
+    //bool isTriggered = false;
     protected override void Awake()
     {
         base.Awake();
         vrController.OnSwitchToVRView += TryTrigger;
     }
 
-    public override void Trigger()
+    protected override void Trigger()
     {
-        isTriggered = true;
+        base.Trigger();
         entryToShow.SetActive(true);
-        RegisterStatus();
     }
 
     void TryTrigger(ARVRSwitchData data)
@@ -31,6 +30,7 @@ public class MineCellEntryInUndergroundController : OneTimeTrigger {
         if (!isTriggered && data.Equals(dataForTunnelEntry))
         {
             Trigger();
+            RegisterStatus();
         }
     }
 }

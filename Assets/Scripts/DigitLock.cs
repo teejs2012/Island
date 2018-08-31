@@ -30,8 +30,11 @@ public class DigitLock : OneTimeTrigger {
         }
     }
 
-    public override void Trigger()
+    protected override void Trigger()
     {
-        Unlock();
+        base.Trigger();
+        data.TargetOpenable.Unlock();
+        RegisterStatus();
+        Destroy(gameObject);
     }
 }

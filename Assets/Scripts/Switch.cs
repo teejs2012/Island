@@ -57,14 +57,14 @@ public abstract class Switch : OnOffStatusObject {
         {
             SwitchOn();
         }
-        RegisterStatus(isOn);
+        //RegisterStatus(isOn);
     }
 
-    public override void SetOpenableDataStatus(bool isOn)
-    {
-        base.SetOpenableDataStatus(isOn);
-        this.isOn = isOn;
-    }
+    //public override void SetOpenableDataStatus(bool isOn)
+    //{
+    //    base.SetOpenableDataStatus(isOn);
+    //    this.isOn = isOn;
+    //}
 
     virtual protected void SwitchOn() { }
     virtual protected void SwitchOff() { }

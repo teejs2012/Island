@@ -14,13 +14,13 @@ public class OnOffStatusObject : MonoBehaviour {
         name = name + Utility.CreateMD5(transform.position.ToString() + transform.eulerAngles.ToString());
     }
 
-    protected void RegisterStatus(bool isOn)
-    {
-        StatusManager.Instance.RegisterAsOnOffStatusObject(name, isOn);
-    }
+    //protected void RegisterStatus(bool isOn)
+    //{
+    //    StatusManager.Instance.RegisterAsOnOffStatusObject(name, isOn);
+    //}
 
-    public virtual void SetOpenableDataStatus(bool isOpen)
-    {
-        RegisterStatus(isOpen);
-    }
+    //public virtual void SetOpenableDataStatus(bool isOpen)
+    //{
+    //    RegisterStatus(isOpen);
+    //}
 }

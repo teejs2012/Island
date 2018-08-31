@@ -30,21 +30,17 @@ public class TunnelUndergroundController : OneTimeTrigger {
     [SerializeField]
     VRViewCameraController vrController;
 
-
-    bool isTriggered = false;
     protected override void Awake()
     {
         base.Awake();
         vrController.OnSwitchToVRView += SetUnderGroundPos;
         vrController.OnExitVRView += TryTrigger;
     }
-    public override void Trigger()
+    protected override void Trigger()
     {
-        Debug.Log("Doing trigger");
-        isTriggered = true;
+        base.Trigger();
         Light.SetActive(true);
-        OpenUndergroundCover();
-        RegisterStatus();
+        OpenUndergroundCover(); 
     }
 
     void SetUnderGroundPos(ARVRSwitchData data)
@@ -65,6 +61,7 @@ public class TunnelUndergroundController : OneTimeTrigger {
         if(!isTriggered && data.Equals(dataForUnderground))
         {
             Trigger();
+            RegisterStatus();
         }
     }
 

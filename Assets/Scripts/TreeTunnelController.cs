@@ -12,18 +12,16 @@ public class TreeTunnelController : OneTimeTrigger
     [SerializeField]
     VRViewCameraController vrController;
 
-    bool isTriggered = false;
     protected override void Awake()
     {
         base.Awake();
         vrController.OnExitVRView += TryTrigger;
     }
 
-    public override void Trigger()
+    protected override void Trigger()
     {
-        isTriggered = true;
+        base.Trigger();
         entryToShow.SetActive(true);
-        RegisterStatus();
     }
 
     void TryTrigger(ARVRSwitchData data)
@@ -31,6 +29,7 @@ public class TreeTunnelController : OneTimeTrigger
         if (!isTriggered && data.Equals(dataForTreeExit))
         {
             Trigger();
+            RegisterStatus();
         }
     }
 }
