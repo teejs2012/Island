@@ -27,7 +27,7 @@ public class MineCellEntryInUndergroundController : OneTimeTrigger {
 
     void TryTrigger(ARVRSwitchData data)
     {
-        if (!isTriggered && data.Equals(dataForTunnelEntry))
+        if (!isTriggered && data == dataForTunnelEntry)
         {
             Trigger();
             RegisterStatus();

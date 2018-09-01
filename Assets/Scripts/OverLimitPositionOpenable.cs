@@ -106,7 +106,7 @@ public class OverLimitPositionOpenable : PositionOpenable {
         StatusManager.Instance.RegisterAsTriggeredObject(name);
         pulledOff = true;
         StopAllCoroutines();
-        LeanTween.cancelAll();
+        LeanTween.cancel(gameObject);
         var rbody = gameObject.AddComponent<Rigidbody>();
         rbody.AddForce(transform.TransformVector(pullDir.normalized) * forceAmount);
         tag = Tags.Untagged;

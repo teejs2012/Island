@@ -35,7 +35,7 @@ public abstract class Switch : OnOffStatusObject {
     void OnDisable()
     {
         StopAllCoroutines();
-        LeanTween.cancelAll();
+        LeanTween.cancel(gameObject);
         isDoingSwitchAnimation = false;
     }
 

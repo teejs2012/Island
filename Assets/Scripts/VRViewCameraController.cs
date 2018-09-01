@@ -79,6 +79,7 @@ public class VRViewCameraController : MonoBehaviour {
             Destroy(currentBlendlistCam.gameObject);
             //currentBlendlistCam.enabled = false;
         }
+        currentData = null;
     }
 
     Gyroscope gyro;
@@ -169,12 +170,13 @@ public class VRViewCameraController : MonoBehaviour {
 
         //restore the AR scene
         currentARScene.SetParent(currentARSceneParent);
-        currentARScene.gameObject.SetActive(false);
         var depthMask = currentData.DepthMask;
         if (depthMask != null)
         {
             depthMask.SetActive(true);
         }
+        currentARScene.gameObject.SetActive(false);
+
     }
 
     bool isDoingSwitch = false;

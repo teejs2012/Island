@@ -43,7 +43,7 @@ public abstract class Openable : OnOffStatusObject
 
     void OnDisable()
     {
-        LeanTween.cancelAll();
+        LeanTween.cancel(gameObject);
         resetIsChangeStatus();
     }
 
